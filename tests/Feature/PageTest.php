@@ -7,6 +7,7 @@ use App\Models\Page;
 use App\Models\Portfolio;
 use App\Models\Post;
 use App\Models\Service;
+use App\Models\Setting;
 use App\Models\TeamMember;
 use App\Models\Testimonial;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -351,5 +352,26 @@ class PageTest extends TestCase
         $aboutResponse->assertSee('কমপ্লিট প্রজেক্ট রেকর্ড');
         $aboutResponse->assertSee('568');
         $aboutResponse->assertDontSee('লুকানো অর্জন');
+    }
+
+    /**
+     * Test about page renders dynamic about section using database settings.
+     */
+    public function test_about_page_renders_dynamic_about_section_from_database_settings(): void
+    {
+        Setting::set('about_subtitle', 'আমাদের স্পেশাল পরিচিতি');
+        Setting::set('about_title', 'আমাদের রয়েছে ১০ বছরের অভিজ্ঞতা');
+        Setting::set('about_description', 'কাস্টম আইটি সল্যুশন ও ক্লাউড প্রযুক্তি নিয়ে আমরা কাজ করি।');
+        Setting::set('about_experience_text', '১০ বছরের আন্তর্জাতিক অভিজ্ঞতা');
+        Setting::set('about_support_title', '২৪/৭ ক্লায়েন্ট হেল্পডেস্ক');
+
+        $response = $this->get('/about');
+
+        $response->assertStatus(200);
+        $response->assertSee('আমাদের স্পেশাল পরিচিতি');
+        $response->assertSee('আমাদের রয়েছে ১০ বছরের অভিজ্ঞতা');
+        $response->assertSee('কাস্টম আইটি সল্যুশন ও ক্লাউড প্রযুক্তি নিয়ে আমরা কাজ করি।');
+        $response->assertSee('১০ বছরের আন্তর্জাতিক অভিজ্ঞতা');
+        $response->assertSee('২৪/৭ ক্লায়েন্ট হেল্পডেস্ক');
     }
 }

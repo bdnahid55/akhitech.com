@@ -82,12 +82,15 @@
                     </div>
                     <div class="about_content">
                         <p>
-                            {{ $siteSettings['about_description'] ?? (($siteSettings['site_name'] ?? config('app.name', 'Akhitech')) . ' হচ্ছে বাংলাদেশের অন্যতম বিশ্বস্ত ডিজিটাল সল্যুশন, সফটওয়্যার ডেভেলপমেন্ট ও ওয়েবসাইট মেইনটেনেন্স এজেন্সি। সাশ্রয়ী মূল্যে সর্বোচ্চ কোয়ালিটির আইটি সেবা প্রদান করাই আমাদের মূল লক্ষ্য।') }}
+                            {!! nl2br(e($siteSettings['about_description'] ?? (($siteSettings['site_name'] ?? config('app.name', 'Akhitech')) . ' হচ্ছে বাংলাদেশের অন্যতম বিশ্বস্ত ডিজিটাল সল্যুশন, সফটওয়্যার ডেভেলপমেন্ট ও ওয়েবসাইট মেইনটেনেন্স এজেন্সি। সাশ্রয়ী মূল্যে সর্বোচ্চ কোয়ালিটির আইটি সেবা প্রদান করাই আমাদের মূল লক্ষ্য।'))) !!}
                         </p>
                         <div class="grid_item">
                             <div class="left">
                                 @if (!empty($siteSettings['about_experience_text']))
                                     <div class="experience">
+                                        <span>
+                                            <i class="fas fa-award text-danger fa-lg"></i>
+                                        </span>
                                         <p>{{ $siteSettings['about_experience_text'] }}</p>
                                     </div>
                                 @endif

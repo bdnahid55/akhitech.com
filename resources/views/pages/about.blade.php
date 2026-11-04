@@ -27,26 +27,29 @@
                         <div class="support_img">
                             <img src="{{ $aboutSupportImg }}" alt="about" class="img-fluid w-100">
                             <div class="item_card">
-                                <span><i class="fas fa-award fa-2x text-white"></i></span>
+                                <span><i class="fas fa-headset fa-2x text-white"></i></span>
                                 <h3>{{ $siteSettings['about_support_title'] ?? '২৪/৭ সাপোর্ট' }}</h3>
-                                <p>{{ $siteSettings['about_support_text'] ?? 'আমাদের নিবেদিত টিম সার্বক্ষণিক প্রস্তুত' }}</p>
+                                <p>{{ $siteSettings['about_support_text'] ?? 'যেকোন সময়ে, যেকোন সমস্যায়' }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 wow fadeInRight" data-wow-duration="1s">
                     <div class="section_heading pt_35">
-                        <h3>{{ $siteSettings['about_subtitle'] ?? 'কোম্পানি পরিচিতি' }}</h3>
-                        <h2>{{ $siteSettings['about_title'] ?? 'আমাদের রয়েছে ৬ বছরের বাস্তব অভিজ্ঞতা' }}</h2>
+                        <h3>{{ $siteSettings['about_subtitle'] ?? 'কোম্পানি সম্পর্কে' }}</h3>
+                        <h2>{{ $siteSettings['about_title'] ?? 'আমাদের রয়েছে ৬ বছরের পেশাদার অভিজ্ঞতা' }}</h2>
                     </div>
                     <div class="about_content">
                         <p>
-                            {{ $siteSettings['about_description'] ?? (($siteSettings['site_name'] ?? config('app.name', 'Akhitech')) . ' একটি আধুনিক ও নির্ভরযোগ্য সফটওয়্যার ও আইটি প্রতিষ্ঠান। আমরা ক্ষুদ্র ও মাঝারি ব্যবসা থেকে শুরু করে বৃহৎ করপোরেট প্রতিষ্ঠানগুলোর জন্য কাস্টম ওয়েব ও সফটওয়্যার সল্যুশন তৈরি করি।') }}
+                            {!! nl2br(e($siteSettings['about_description'] ?? (($siteSettings['site_name'] ?? config('app.name', 'Akhitech')) . ' হচ্ছে বাংলাদেশের অন্যতম বিশ্বস্ত ডিজিটাল সল্যুশন, সফটওয়্যার ডেভেলপমেন্ট ও ওয়েবসাইট মেইনটেনেন্স এজেন্সি। সাশ্রয়ী মূল্যে সর্বোচ্চ কোয়ালিটির আইটি সেবা প্রদান করাই আমাদের মূল লক্ষ্য।'))) !!}
                         </p>
                         <div class="grid_item">
                             <div class="left">
                                 @if (!empty($siteSettings['about_experience_text']))
                                     <div class="experience">
+                                        <span>
+                                            <i class="fas fa-award text-danger fa-lg"></i>
+                                        </span>
                                         <p>{{ $siteSettings['about_experience_text'] }}</p>
                                     </div>
                                 @endif
@@ -64,17 +67,17 @@
                                         <li>{{ $siteSettings['about_feature_4'] }}</li>
                                     @endif
                                 </ul>
-                                <a class="common_btn" href="{{ route('quote') }}">ফ্রি কনসালটেশন</a>
+                                <a class="common_btn" href="{{ route('quote') }}">{{ $siteSettings['banner_btn_text'] ?? 'ফ্রি কনসালটেশন' }}</a>
                             </div>
                             <div class="right">
                                 <div class="counter_item">
                                     <h4>{{ $siteSettings['about_counter_1_number'] ?? '১০০%' }}</h4>
-                                    <p>{{ $siteSettings['about_counter_1_title'] ?? 'সফলতার হার' }}</p>
+                                    <p>{{ $siteSettings['about_counter_1_title'] ?? 'সফলতার রেট' }}</p>
                                 </div>
                                 <hr>
                                 <div class="counter_item">
                                     <h4>{{ $siteSettings['about_counter_2_number'] ?? '৪৬৫+' }}</h4>
-                                    <p>{{ $siteSettings['about_counter_2_title'] ?? 'সন্তুষ্ট গ্রাহক' }}</p>
+                                    <p>{{ $siteSettings['about_counter_2_title'] ?? 'সন্তুষ্ট ক্লায়েন্ট' }}</p>
                                 </div>
                             </div>
                         </div>
