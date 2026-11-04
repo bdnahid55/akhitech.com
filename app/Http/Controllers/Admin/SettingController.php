@@ -43,6 +43,36 @@ class SettingController extends Controller
             'social_linkedin' => ['nullable', 'url', 'max:255'],
             'social_youtube' => ['nullable', 'url', 'max:255'],
             'social_instagram' => ['nullable', 'url', 'max:255'],
+            // Banner Settings
+            'banner_subtitle' => ['nullable', 'string', 'max:255'],
+            'banner_title' => ['nullable', 'string', 'max:255'],
+            'banner_description' => ['nullable', 'string', 'max:1500'],
+            'banner_btn_text' => ['nullable', 'string', 'max:100'],
+            'banner_btn_url' => ['nullable', 'string', 'max:255'],
+            'banner_video_url' => ['nullable', 'string', 'max:255'],
+            'banner_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:4096'],
+            'banner_bg_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:4096'],
+
+            // About Settings
+            'about_subtitle' => ['nullable', 'string', 'max:255'],
+            'about_title' => ['nullable', 'string', 'max:255'],
+            'about_description' => ['nullable', 'string', 'max:2500'],
+            'about_experience_text' => ['nullable', 'string', 'max:255'],
+            'about_feature_1' => ['nullable', 'string', 'max:255'],
+            'about_feature_2' => ['nullable', 'string', 'max:255'],
+            'about_feature_3' => ['nullable', 'string', 'max:255'],
+            'about_feature_4' => ['nullable', 'string', 'max:255'],
+            'about_counter_1_number' => ['nullable', 'string', 'max:50'],
+            'about_counter_1_title' => ['nullable', 'string', 'max:100'],
+            'about_counter_2_number' => ['nullable', 'string', 'max:50'],
+            'about_counter_2_title' => ['nullable', 'string', 'max:100'],
+            'about_support_title' => ['nullable', 'string', 'max:100'],
+            'about_support_text' => ['nullable', 'string', 'max:255'],
+            'about_main_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:4096'],
+            'about_small_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:4096'],
+            'about_support_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:4096'],
+
+            // Footer & SEO
             'footer_about_text' => ['nullable', 'string', 'max:1000'],
             'footer_copyright' => ['nullable', 'string', 'max:255'],
             'default_meta_title' => ['nullable', 'string', 'max:255'],
@@ -53,7 +83,17 @@ class SettingController extends Controller
             'google_search_console_code' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $fileKeys = ['header_logo', 'footer_logo', 'favicon', 'default_og_image'];
+        $fileKeys = [
+            'header_logo',
+            'footer_logo',
+            'favicon',
+            'default_og_image',
+            'banner_image',
+            'banner_bg_image',
+            'about_main_image',
+            'about_small_image',
+            'about_support_image',
+        ];
 
         foreach ($fileKeys as $fileKey) {
             if ($request->hasFile($fileKey)) {

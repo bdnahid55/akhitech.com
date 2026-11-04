@@ -3,30 +3,40 @@
 @section('title', 'হোম')
 
 @section('content')
+    @php
+        $bannerBg = !empty($siteSettings['banner_bg_image']) ? (str_starts_with($siteSettings['banner_bg_image'], 'http') ? $siteSettings['banner_bg_image'] : asset($siteSettings['banner_bg_image'])) : asset('assets/front/img/17361026461740401592.jpg');
+        $bannerImg = !empty($siteSettings['banner_image']) ? (str_starts_with($siteSettings['banner_image'], 'http') ? $siteSettings['banner_image'] : asset($siteSettings['banner_image'])) : asset('assets/front/img/17361014651911523454.png');
+    @endphp
     <!--==============================
-        BANNER START
+        BANNER START (DYNAMIC)
     ===============================-->
-    <section class="banner" style="background: url({{ asset('assets/front/img/17361026461740401592.jpg') }}) no-repeat center/cover;">
+    <section class="banner" style="background: url({{ $bannerBg }}) no-repeat center/cover;">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-xl-6 col-lg-6 wow fadeInLeft" data-wow-duration="1s">
                     <div class="banner_content">
-                        <h3>৬ বছরের বাস্তব অভিজ্ঞতা</h3>
-                        <h1>Creating New Ideas for Your Business</h1>
+                        @if (!empty($siteSettings['banner_subtitle']))
+                            <h3>{{ $siteSettings['banner_subtitle'] }}</h3>
+                        @endif
+                        <h1>{{ $siteSettings['banner_title'] ?? 'Creating New Ideas for Your Business' }}</h1>
                         <p class="description">
-                            আমাদের কাছ থেকে মাত্র ৮০০০ টাকা দিয়ে আপনার স্বপ্নের ওয়েবসাইট ও সফটওয়্যার তৈরি করুন। আপনার ওয়েবসাইট হবে ১০০% রেসপনসিভ, দ্রুতগতির ও নিরাপদ।
+                            {{ $siteSettings['banner_description'] ?? 'আমাদের কাছ থেকে মাত্র ৮০০০ টাকা দিয়ে আপনার স্বপ্নের ওয়েবসাইট ও সফটওয়্যার তৈরি করুন। আপনার ওয়েবসাইট হবে ১০০% রেসপনসিভ, দ্রুতগতির ও নিরাপদ।' }}
                         </p>
                         <div class="banner_btn d-flex flex-wrap align-items-center">
-                            <a href="{{ route('quote') }}" class="common_btn">ফ্রি কনসালটেশন</a>
-                            <a class="venobox play_btn ms-3" data-autoplay="true" data-vbtype="video" href="https://youtu.be/#">
-                                <i class="fas fa-play"></i>
+                            <a href="{{ $siteSettings['banner_btn_url'] ?? route('quote') }}" class="common_btn">
+                                {{ $siteSettings['banner_btn_text'] ?? 'ফ্রি কনসালটেশন' }}
                             </a>
+                            @if (!empty($siteSettings['banner_video_url']) && $siteSettings['banner_video_url'] !== '#')
+                                <a class="venobox play_btn ms-3" data-autoplay="true" data-vbtype="video" href="{{ $siteSettings['banner_video_url'] }}" aria-label="Play video">
+                                    <i class="fas fa-play"></i>
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 wow fadeInRight" data-wow-duration="1s">
                     <div class="banner_img">
-                        <img src="{{ asset('assets/front/img/17361014651911523454.png') }}" alt="banner-img" class="img-fluid w-100">
+                        <img src="{{ $bannerImg }}" alt="{{ $siteSettings['banner_title'] ?? 'banner-img' }}" class="img-fluid w-100">
                     </div>
                 </div>
             </div>
@@ -36,8 +46,13 @@
         BANNER END
     ===============================-->
 
+    @php
+        $aboutMainImg = !empty($siteSettings['about_main_image']) ? (str_starts_with($siteSettings['about_main_image'], 'http') ? $siteSettings['about_main_image'] : asset($siteSettings['about_main_image'])) : asset('assets/front/img/1736010571398020711.png');
+        $aboutSmallImg = !empty($siteSettings['about_small_image']) ? (str_starts_with($siteSettings['about_small_image'], 'http') ? $siteSettings['about_small_image'] : asset($siteSettings['about_small_image'])) : asset('assets/front/img/1736010555348706608.png');
+        $aboutSupportImg = !empty($siteSettings['about_support_image']) ? (str_starts_with($siteSettings['about_support_image'], 'http') ? $siteSettings['about_support_image'] : asset($siteSettings['about_support_image'])) : asset('assets/front/img/17361016132036935658.png');
+    @endphp
     <!--==============================
-        ABOUT START
+        ABOUT START (DYNAMIC)
     ===============================-->
     <section class="about pt_120 xs_pt_80 pb_120 xs_pb_80">
         <div class="container">
@@ -45,51 +60,62 @@
                 <div class="col-lg-6 wow fadeInLeft" data-wow-duration="1s">
                     <div class="about_img_box">
                         <div class="small_img">
-                            <img src="{{ asset('assets/front/img/1736010555348706608.png') }}" alt="about" class="img-fluid w-100">
+                            <img src="{{ $aboutSmallImg }}" alt="about" class="img-fluid w-100">
                         </div>
                         <div class="main_img">
-                            <img src="{{ asset('assets/front/img/1736010571398020711.png') }}" alt="about" class="img-fluid w-100">
+                            <img src="{{ $aboutMainImg }}" alt="about" class="img-fluid w-100">
                         </div>
                         <div class="support_img">
-                            <img src="{{ asset('assets/front/img/17361016132036935658.png') }}" alt="about" class="img-fluid w-100">
+                            <img src="{{ $aboutSupportImg }}" alt="about" class="img-fluid w-100">
                             <div class="item_card">
                                 <span><i class="fas fa-headset fa-2x text-white"></i></span>
-                                <h3>২৪/৭ সাপোর্ট</h3>
-                                <p>যেকোন সময়ে, যেকোন সমস্যায়</p>
+                                <h3>{{ $siteSettings['about_support_title'] ?? '২৪/৭ সাপোর্ট' }}</h3>
+                                <p>{{ $siteSettings['about_support_text'] ?? 'যেকোন সময়ে, যেকোন সমস্যায়' }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 wow fadeInRight" data-wow-duration="1s">
                     <div class="section_heading pt_35">
-                        <h3>কোম্পানি সম্পর্কে</h3>
-                        <h2>আমাদের রয়েছে ৬ বছরের পেশাদার অভিজ্ঞতা</h2>
+                        <h3>{{ $siteSettings['about_subtitle'] ?? 'কোম্পানি সম্পর্কে' }}</h3>
+                        <h2>{{ $siteSettings['about_title'] ?? 'আমাদের রয়েছে ৬ বছরের পেশাদার অভিজ্ঞতা' }}</h2>
                     </div>
                     <div class="about_content">
                         <p>
-                            {{ $siteSettings['site_name'] ?? config('app.name', 'Akhitech') }} হচ্ছে বাংলাদেশের অন্যতম বিশ্বস্ত ডিজিটাল সল্যুশন, সফটওয়্যার ডেভেলপমেন্ট ও ওয়েবসাইট মেইনটেনেন্স এজেন্সি। সাশ্রয়ী মূল্যে সর্বোচ্চ কোয়ালিটির আইটি সেবা প্রদান করাই আমাদের মূল লক্ষ্য।
+                            {{ $siteSettings['about_description'] ?? (($siteSettings['site_name'] ?? config('app.name', 'Akhitech')) . ' হচ্ছে বাংলাদেশের অন্যতম বিশ্বস্ত ডিজিটাল সল্যুশন, সফটওয়্যার ডেভেলপমেন্ট ও ওয়েবসাইট মেইনটেনেন্স এজেন্সি। সাশ্রয়ী মূল্যে সর্বোচ্চ কোয়ালিটির আইটি সেবা প্রদান করাই আমাদের মূল লক্ষ্য।') }}
                         </p>
                         <div class="grid_item">
                             <div class="left">
-                                <div class="experience">
-                                    <p>৬ বছরের পরামর্শের <span>অভিজ্ঞতা</span></p>
-                                </div>
+                                @if (!empty($siteSettings['about_experience_text']))
+                                    <div class="experience">
+                                        <p>{{ $siteSettings['about_experience_text'] }}</p>
+                                    </div>
+                                @endif
                                 <ul>
-                                    <li>ওয়েব ডিজাইন ও ডেভেলপমেন্ট</li>
-                                    <li>কাস্টম সফটওয়্যার সল্যুশন</li>
-                                    <li>এসইও ও ডিজিটাল মার্কেটিং</li>
+                                    @if (!empty($siteSettings['about_feature_1']))
+                                        <li>{{ $siteSettings['about_feature_1'] }}</li>
+                                    @endif
+                                    @if (!empty($siteSettings['about_feature_2']))
+                                        <li>{{ $siteSettings['about_feature_2'] }}</li>
+                                    @endif
+                                    @if (!empty($siteSettings['about_feature_3']))
+                                        <li>{{ $siteSettings['about_feature_3'] }}</li>
+                                    @endif
+                                    @if (!empty($siteSettings['about_feature_4']))
+                                        <li>{{ $siteSettings['about_feature_4'] }}</li>
+                                    @endif
                                 </ul>
                                 <a class="common_btn" href="{{ route('about') }}">আরও জানুন</a>
                             </div>
                             <div class="right">
                                 <div class="counter_item">
-                                    <h4>১০০%</h4>
-                                    <p>সফলতার রেট</p>
+                                    <h4>{{ $siteSettings['about_counter_1_number'] ?? '১০০%' }}</h4>
+                                    <p>{{ $siteSettings['about_counter_1_title'] ?? 'সফলতার রেট' }}</p>
                                 </div>
                                 <hr>
                                 <div class="counter_item">
-                                    <h4>৪৬৫+</h4>
-                                    <p>সন্তুষ্ট ক্লায়েন্ট</p>
+                                    <h4>{{ $siteSettings['about_counter_2_number'] ?? '৪৬৫+' }}</h4>
+                                    <p>{{ $siteSettings['about_counter_2_title'] ?? 'সন্তুষ্ট ক্লায়েন্ট' }}</p>
                                 </div>
                             </div>
                         </div>

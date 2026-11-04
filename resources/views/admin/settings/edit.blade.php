@@ -19,6 +19,16 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link font-weight-bold" id="tab-banner-link" data-toggle="pill" href="#tab-banner" role="tab">
+                                    <i class="fas fa-sliders-h mr-1"></i> হোম ব্যানার
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link font-weight-bold" id="tab-about-link" data-toggle="pill" href="#tab-about" role="tab">
+                                    <i class="fas fa-info-circle mr-1"></i> এবাউট সেকশন
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link font-weight-bold" id="tab-contact-link" data-toggle="pill" href="#tab-contact" role="tab">
                                     <i class="fas fa-address-book mr-1"></i> যোগাযোগ তথ্য
                                 </a>
@@ -92,7 +102,170 @@
                                 </div>
                             </div>
 
-                            <!-- Tab 2: Contact Info -->
+                            <!-- Tab 2: Home Banner -->
+                            <div class="tab-pane fade" id="tab-banner" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label for="banner_subtitle">ব্যানার সাবটাইটেল (Subtitle / Experience Badge)</label>
+                                        <input type="text" name="banner_subtitle" id="banner_subtitle" class="form-control" value="{{ old('banner_subtitle', $settings['banner_subtitle'] ?? '') }}" placeholder="যেমন: ৬ বছরের বাস্তব অভিজ্ঞতা">
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label for="banner_title">ব্যানার প্রধান শিরোনাম (Title)</label>
+                                        <input type="text" name="banner_title" id="banner_title" class="form-control" value="{{ old('banner_title', $settings['banner_title'] ?? '') }}" placeholder="যেমন: Creating New Ideas for Your Business">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="banner_description">ব্যানার বিবরণ (Description)</label>
+                                    <textarea name="banner_description" id="banner_description" rows="3" class="form-control">{{ old('banner_description', $settings['banner_description'] ?? '') }}</textarea>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4 form-group">
+                                        <label for="banner_btn_text">বাটন লেখা (Button Text)</label>
+                                        <input type="text" name="banner_btn_text" id="banner_btn_text" class="form-control" value="{{ old('banner_btn_text', $settings['banner_btn_text'] ?? '') }}" placeholder="ফ্রি কনসালটেশন">
+                                    </div>
+                                    <div class="col-md-4 form-group">
+                                        <label for="banner_btn_url">বাটন লিঙ্ক (Button URL)</label>
+                                        <input type="text" name="banner_btn_url" id="banner_btn_url" class="form-control" value="{{ old('banner_btn_url', $settings['banner_btn_url'] ?? '') }}" placeholder="/get-quote বা কাস্টম লিঙ্ক">
+                                    </div>
+                                    <div class="col-md-4 form-group">
+                                        <label for="banner_video_url">ভিডিও পপআপ লিঙ্ক (YouTube Video URL)</label>
+                                        <input type="text" name="banner_video_url" id="banner_video_url" class="form-control" value="{{ old('banner_video_url', $settings['banner_video_url'] ?? '') }}" placeholder="https://youtu.be/...">
+                                    </div>
+                                </div>
+
+                                <div class="row mt-2">
+                                    <div class="col-md-6 form-group">
+                                        <label for="banner_image">ব্যানার প্রধান ছবি (Right Hero Image)</label>
+                                        @if (!empty($settings['banner_image']))
+                                            <div class="p-2 bg-light border rounded mb-2 text-center">
+                                                <img src="{{ str_starts_with($settings['banner_image'], 'http') ? $settings['banner_image'] : asset($settings['banner_image']) }}" alt="Banner" style="max-height: 120px;">
+                                            </div>
+                                        @endif
+                                        <input type="file" name="banner_image" id="banner_image" class="form-control-file" accept="image/*">
+                                        <small class="text-muted">PNG/WebP ট্রান্সপারেন্ট ছবি প্রস্তাবিত</small>
+                                    </div>
+
+                                    <div class="col-md-6 form-group">
+                                        <label for="banner_bg_image">ব্যানার ব্যাকগ্রাউন্ড ছবি (Background Image)</label>
+                                        @if (!empty($settings['banner_bg_image']))
+                                            <div class="p-2 bg-light border rounded mb-2 text-center">
+                                                <img src="{{ str_starts_with($settings['banner_bg_image'], 'http') ? $settings['banner_bg_image'] : asset($settings['banner_bg_image']) }}" alt="Banner BG" style="max-height: 120px;">
+                                            </div>
+                                        @endif
+                                        <input type="file" name="banner_bg_image" id="banner_bg_image" class="form-control-file" accept="image/*">
+                                        <small class="text-muted">JPG/WebP হাই রেজোলিউশন ব্যাকগ্রাউন্ড</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab 3: About Section -->
+                            <div class="tab-pane fade" id="tab-about" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label for="about_subtitle">এবাউট সাবটাইটেল</label>
+                                        <input type="text" name="about_subtitle" id="about_subtitle" class="form-control" value="{{ old('about_subtitle', $settings['about_subtitle'] ?? '') }}" placeholder="কোম্পানি সম্পর্কে">
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label for="about_title">এবাউট প্রধান শিরোনাম</label>
+                                        <input type="text" name="about_title" id="about_title" class="form-control" value="{{ old('about_title', $settings['about_title'] ?? '') }}" placeholder="আমাদের রয়েছে ৬ বছরের পেশাদার অভিজ্ঞতা">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="about_description">এবাউট বিস্তারিত বিবরণ (Description)</label>
+                                    <textarea name="about_description" id="about_description" rows="4" class="form-control">{{ old('about_description', $settings['about_description'] ?? '') }}</textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="about_experience_text">অভিজ্ঞতার টেক্সট (Experience Highlight)</label>
+                                    <input type="text" name="about_experience_text" id="about_experience_text" class="form-control" value="{{ old('about_experience_text', $settings['about_experience_text'] ?? '') }}" placeholder="৬ বছরের পরামর্শের অভিজ্ঞতা">
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-3 form-group">
+                                        <label for="about_feature_1">ফিচার ১</label>
+                                        <input type="text" name="about_feature_1" id="about_feature_1" class="form-control" value="{{ old('about_feature_1', $settings['about_feature_1'] ?? '') }}">
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        <label for="about_feature_2">ফিচার ২</label>
+                                        <input type="text" name="about_feature_2" id="about_feature_2" class="form-control" value="{{ old('about_feature_2', $settings['about_feature_2'] ?? '') }}">
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        <label for="about_feature_3">ফিচার ৩</label>
+                                        <input type="text" name="about_feature_3" id="about_feature_3" class="form-control" value="{{ old('about_feature_3', $settings['about_feature_3'] ?? '') }}">
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        <label for="about_feature_4">ফিচার ৪</label>
+                                        <input type="text" name="about_feature_4" id="about_feature_4" class="form-control" value="{{ old('about_feature_4', $settings['about_feature_4'] ?? '') }}">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-3 form-group">
+                                        <label for="about_counter_1_number">কাউন্টার ১ সংখ্যা</label>
+                                        <input type="text" name="about_counter_1_number" id="about_counter_1_number" class="form-control" value="{{ old('about_counter_1_number', $settings['about_counter_1_number'] ?? '') }}" placeholder="১০০%">
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        <label for="about_counter_1_title">কাউন্টার ১ শিরোনাম</label>
+                                        <input type="text" name="about_counter_1_title" id="about_counter_1_title" class="form-control" value="{{ old('about_counter_1_title', $settings['about_counter_1_title'] ?? '') }}" placeholder="সফলতার হার">
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        <label for="about_counter_2_number">কাউন্টার ২ সংখ্যা</label>
+                                        <input type="text" name="about_counter_2_number" id="about_counter_2_number" class="form-control" value="{{ old('about_counter_2_number', $settings['about_counter_2_number'] ?? '') }}" placeholder="৪৬৫+">
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        <label for="about_counter_2_title">কাউন্টার ২ শিরোনাম</label>
+                                        <input type="text" name="about_counter_2_title" id="about_counter_2_title" class="form-control" value="{{ old('about_counter_2_title', $settings['about_counter_2_title'] ?? '') }}" placeholder="সন্তুষ্ট ক্লায়েন্ট">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label for="about_support_title">সাপোর্ট ব্যাজ শিরোনাম</label>
+                                        <input type="text" name="about_support_title" id="about_support_title" class="form-control" value="{{ old('about_support_title', $settings['about_support_title'] ?? '') }}" placeholder="২৪/৭ সাপোর্ট">
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label for="about_support_text">সাপোর্ট ব্যাজ সাবটাইটেল</label>
+                                        <input type="text" name="about_support_text" id="about_support_text" class="form-control" value="{{ old('about_support_text', $settings['about_support_text'] ?? '') }}" placeholder="যেকোন সময়ে, যেকোন সমস্যায়">
+                                    </div>
+                                </div>
+
+                                <div class="row mt-2">
+                                    <div class="col-md-4 form-group">
+                                        <label for="about_main_image">এবাউট প্রধান ছবি</label>
+                                        @if (!empty($settings['about_main_image']))
+                                            <div class="p-2 bg-light border rounded mb-2 text-center">
+                                                <img src="{{ str_starts_with($settings['about_main_image'], 'http') ? $settings['about_main_image'] : asset($settings['about_main_image']) }}" alt="About Main" style="max-height: 100px;">
+                                            </div>
+                                        @endif
+                                        <input type="file" name="about_main_image" id="about_main_image" class="form-control-file" accept="image/*">
+                                    </div>
+
+                                    <div class="col-md-4 form-group">
+                                        <label for="about_small_image">এবাউট ছোট ছবি (Small Image)</label>
+                                        @if (!empty($settings['about_small_image']))
+                                            <div class="p-2 bg-light border rounded mb-2 text-center">
+                                                <img src="{{ str_starts_with($settings['about_small_image'], 'http') ? $settings['about_small_image'] : asset($settings['about_small_image']) }}" alt="About Small" style="max-height: 100px;">
+                                            </div>
+                                        @endif
+                                        <input type="file" name="about_small_image" id="about_small_image" class="form-control-file" accept="image/*">
+                                    </div>
+
+                                    <div class="col-md-4 form-group">
+                                        <label for="about_support_image">এবাউট সাপোর্ট ছবি</label>
+                                        @if (!empty($settings['about_support_image']))
+                                            <div class="p-2 bg-light border rounded mb-2 text-center">
+                                                <img src="{{ str_starts_with($settings['about_support_image'], 'http') ? $settings['about_support_image'] : asset($settings['about_support_image']) }}" alt="About Support" style="max-height: 100px;">
+                                            </div>
+                                        @endif
+                                        <input type="file" name="about_support_image" id="about_support_image" class="form-control-file" accept="image/*">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab 4: Contact Info -->
                             <div class="tab-pane fade" id="tab-contact" role="tabpanel">
                                 <div class="row">
                                     <div class="col-md-6 form-group">
@@ -117,7 +290,7 @@
                                 </div>
                             </div>
 
-                            <!-- Tab 3: Social Media -->
+                            <!-- Tab 5: Social Media -->
                             <div class="tab-pane fade" id="tab-social" role="tabpanel">
                                 <div class="row">
                                     <div class="col-md-6 form-group">
@@ -147,7 +320,7 @@
                                 </div>
                             </div>
 
-                            <!-- Tab 4: Footer & Copyright -->
+                            <!-- Tab 6: Footer & Copyright -->
                             <div class="tab-pane fade" id="tab-footer" role="tabpanel">
                                 <div class="form-group">
                                     <label for="footer_about_text">ফুটার সংক্ষিপ্ত পরিচিতি টেক্সট</label>
@@ -161,7 +334,7 @@
                                 </div>
                             </div>
 
-                            <!-- Tab 5: SEO -->
+                            <!-- Tab 7: SEO -->
                             <div class="tab-pane fade" id="tab-seo" role="tabpanel">
                                 <div class="form-group">
                                     <label for="default_meta_title">ডিফল্ট এসইও মেটা টাইটেল (Default Meta Title)</label>

@@ -250,6 +250,8 @@ class AdminTest extends TestCase
         // Update settings
         $updateResponse = $this->actingAs($user)->put('/admin/settings', [
             'site_name' => 'Akhitech Solutions Ltd.',
+            'banner_title' => 'স্মার্ট বিজনেস সল্যুশন ও উদ্ভাবন',
+            'about_title' => '১০ বছরের সমৃদ্ধ পেশাদার অভিজ্ঞতা',
             'contact_phone' => '+8801999999999',
             'contact_email' => 'hello@akhitech.com',
             'footer_copyright' => '© 2026 Akhitech Solutions Ltd. All rights reserved.',
@@ -259,6 +261,8 @@ class AdminTest extends TestCase
 
         $updateResponse->assertRedirect('/admin/settings');
         $this->assertEquals('Akhitech Solutions Ltd.', Setting::get('site_name'));
+        $this->assertEquals('স্মার্ট বিজনেস সল্যুশন ও উদ্ভাবন', Setting::get('banner_title'));
+        $this->assertEquals('১০ বছরের সমৃদ্ধ পেশাদার অভিজ্ঞতা', Setting::get('about_title'));
         $this->assertEquals('+8801999999999', Setting::get('contact_phone'));
         $this->assertEquals('hello@akhitech.com', Setting::get('contact_email'));
     }

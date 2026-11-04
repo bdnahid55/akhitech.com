@@ -22,6 +22,35 @@ class SettingSeeder extends Seeder
             ['key' => 'footer_logo', 'value' => 'assets/front/img/footer_logo17368777782046431399.png', 'group' => 'general'],
             ['key' => 'favicon', 'value' => 'assets/front/img/fav_icon_17368750061518442947.png', 'group' => 'general'],
 
+            // Banner Section
+            ['key' => 'banner_subtitle', 'value' => '৬ বছরের বাস্তব অভিজ্ঞতা', 'group' => 'banner'],
+            ['key' => 'banner_title', 'value' => 'Creating New Ideas for Your Business', 'group' => 'banner'],
+            ['key' => 'banner_description', 'value' => 'আমাদের কাছ থেকে মাত্র ৮০০০ টাকা দিয়ে আপনার স্বপ্নের ওয়েবসাইট ও সফটওয়্যার তৈরি করুন। আপনার ওয়েবসাইট হবে ১০০% রেসপনসিভ, দ্রুতগতির ও নিরাপদ।', 'group' => 'banner'],
+            ['key' => 'banner_btn_text', 'value' => 'ফ্রি কনসালটেশন', 'group' => 'banner'],
+            ['key' => 'banner_btn_url', 'value' => '/get-quote', 'group' => 'banner'],
+            ['key' => 'banner_video_url', 'value' => 'https://youtu.be/#', 'group' => 'banner'],
+            ['key' => 'banner_image', 'value' => 'assets/front/img/17361014651911523454.png', 'group' => 'banner'],
+            ['key' => 'banner_bg_image', 'value' => 'assets/front/img/17361026461740401592.jpg', 'group' => 'banner'],
+
+            // About Section
+            ['key' => 'about_subtitle', 'value' => 'কোম্পানি সম্পর্কে', 'group' => 'about'],
+            ['key' => 'about_title', 'value' => 'আমাদের রয়েছে ৬ বছরের পেশাদার অভিজ্ঞতা', 'group' => 'about'],
+            ['key' => 'about_description', 'value' => 'হচ্ছে বাংলাদেশের অন্যতম বিশ্বস্ত ডিজিটাল সল্যুশন, সফটওয়্যার ডেভেলপমেন্ট ও ওয়েবসাইট মেইনটেনেন্স এজেন্সি। সাশ্রয়ী মূল্যে সর্বোচ্চ কোয়ালিটির আইটি সেবা প্রদান করাই আমাদের মূল লক্ষ্য।', 'group' => 'about'],
+            ['key' => 'about_experience_text', 'value' => '৬ বছরের পরামর্শের অভিজ্ঞতা', 'group' => 'about'],
+            ['key' => 'about_feature_1', 'value' => 'ওয়েব ডিজাইন ও ডেভেলপমেন্ট', 'group' => 'about'],
+            ['key' => 'about_feature_2', 'value' => 'কাস্টম সফটওয়্যার সল্যুশন', 'group' => 'about'],
+            ['key' => 'about_feature_3', 'value' => 'গ্রাফিক্স ও UI/UX ডিজাইন', 'group' => 'about'],
+            ['key' => 'about_feature_4', 'value' => 'সার্চ ইঞ্জিন অপটিমাইজেশন (SEO)', 'group' => 'about'],
+            ['key' => 'about_counter_1_number', 'value' => '১০০%', 'group' => 'about'],
+            ['key' => 'about_counter_1_title', 'value' => 'সফলতার হার', 'group' => 'about'],
+            ['key' => 'about_counter_2_number', 'value' => '৪৬৫+', 'group' => 'about'],
+            ['key' => 'about_counter_2_title', 'value' => 'সন্তুষ্ট ক্লায়েন্ট', 'group' => 'about'],
+            ['key' => 'about_support_title', 'value' => '২৪/৭ সাপোর্ট', 'group' => 'about'],
+            ['key' => 'about_support_text', 'value' => 'যেকোন সময়ে, যেকোন সমস্যায়', 'group' => 'about'],
+            ['key' => 'about_main_image', 'value' => 'assets/front/img/1736010571398020711.png', 'group' => 'about'],
+            ['key' => 'about_small_image', 'value' => 'assets/front/img/1736010555348706608.png', 'group' => 'about'],
+            ['key' => 'about_support_image', 'value' => 'assets/front/img/17361016132036935658.png', 'group' => 'about'],
+
             // Contact
             ['key' => 'contact_phone', 'value' => '+8801849832178', 'group' => 'contact'],
             ['key' => 'contact_email', 'value' => 'info@akhitech.com', 'group' => 'contact'],
