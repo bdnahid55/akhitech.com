@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AchievementController as AdminAchievementControll
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\InquiryController as AdminInquiryController;
+use App\Http\Controllers\Admin\PackageController as AdminPackageController;
 use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\PortfolioController as AdminPortfolioController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
@@ -26,6 +27,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/services', [PageController::class, 'services'])->name('services');
+Route::get('/packages', [PageController::class, 'packages'])->name('packages');
+Route::redirect('/package', '/packages');
+Route::redirect('/page/packages', '/packages');
 Route::get('/portfolio', [PageController::class, 'portfolio'])->name('portfolio');
 Route::get('/portfolio/{slug}', [PageController::class, 'portfolioDetails'])->name('portfolio.show');
 Route::get('/blog', [PageController::class, 'blog'])->name('blog');
@@ -65,6 +69,9 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     // Services CRUD
     Route::resource('services', AdminServiceController::class);
+
+    // Packages / Pricing CRUD
+    Route::resource('packages', AdminPackageController::class);
 
     // Portfolios CRUD
     Route::resource('portfolios', AdminPortfolioController::class);

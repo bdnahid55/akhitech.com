@@ -74,6 +74,7 @@
                             <li><a href="{{ route('home') }}">হোম</a></li>
                             <li><a href="{{ route('about') }}">আমাদের সম্পর্কে</a></li>
                             <li><a href="{{ route('services') }}">আমাদের সার্ভিস</a></li>
+                            <li><a href="{{ route('packages') }}">আমাদের প্যাকেজ</a></li>
                             <li><a href="{{ route('portfolio') }}">প্রজেক্ট সমূহ</a></li>
                             <li><a href="{{ route('blog') }}">লেটেস্ট ব্লগ</a></li>
                             <li><a href="{{ route('contact') }}">যোগাযোগ করুন</a></li>

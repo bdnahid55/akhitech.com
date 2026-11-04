@@ -33,6 +33,13 @@
                 </li>
 
                 <li class="nav-item">
+                    <a href="{{ route('admin.packages.index') }}" class="nav-link {{ request()->routeIs('admin.packages*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-tags"></i>
+                        <p>প্যাকেজ / প্রাইসিং</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
                     <a href="{{ route('admin.portfolios.index') }}" class="nav-link {{ request()->routeIs('admin.portfolios*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-briefcase"></i>
                         <p>পোর্টফোলিও প্রজেক্ট</p>

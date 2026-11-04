@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Inquiry;
+use App\Models\Package;
 use App\Models\Portfolio;
 use App\Models\Post;
 use App\Models\Service;
@@ -21,6 +22,7 @@ class DashboardController extends Controller
     {
         $stats = [
             'services' => Service::count(),
+            'packages' => Package::count(),
             'portfolios' => Portfolio::count(),
             'posts' => Post::count(),
             'inquiries' => Inquiry::count(),

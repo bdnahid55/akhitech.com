@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Achievement;
 use App\Models\Inquiry;
+use App\Models\Package;
 use App\Models\Page;
 use App\Models\Portfolio;
 use App\Models\Service;
@@ -475,6 +476,83 @@ class AdminTest extends TestCase
         $deleteResponse->assertRedirect('/admin/achievements');
         $this->assertDatabaseMissing('achievements', [
             'id' => $achievement->id,
+        ]);
+    }
+
+    /**
+     * Admin can view, create, edit, and delete packages.
+     */
+    public function test_admin_can_manage_packages(): void
+    {
+        $user = User::factory()->create();
+
+        // 1. View packages index
+        $indexResponse = $this->actingAs($user)->get('/admin/packages');
+        $indexResponse->assertStatus(200);
+
+        // 2. View create form
+        $createResponse = $this->actingAs($user)->get('/admin/packages/create');
+        $createResponse->assertStatus(200);
+
+        // 3. Store new package
+        $storeResponse = $this->actingAs($user)->post('/admin/packages', [
+            'name' => 'নিউজ পোর্টাল প্যাকেজ',
+            'slug' => 'news-portal-package',
+            'price' => '12000',
+            'currency' => '৳',
+            'period' => '/৫ দিনের মধ্যে ডেলিভারি',
+            'features_text' => "লারাভেল ১০/১১ ব্যাকএন্ড\n১০০% মোবাইল ফ্রেন্ডলি\nx কোনো হিডেন চার্জ নেই",
+            'button_text' => 'অর্ডার করুন',
+            'button_url' => '',
+            'is_featured' => 1,
+            'is_active' => 1,
+            'order' => 1,
+        ]);
+
+        $storeResponse->assertRedirect('/admin/packages');
+        $this->assertDatabaseHas('packages', [
+            'name' => 'নিউজ পোর্টাল প্যাকেজ',
+            'slug' => 'news-portal-package',
+            'price' => '12000',
+            'is_featured' => 1,
+        ]);
+
+        $package = Package::where('slug', 'news-portal-package')->firstOrFail();
+        $this->assertCount(3, $package->features);
+
+        // 4. View edit form
+        $editResponse = $this->actingAs($user)->get("/admin/packages/{$package->id}/edit");
+        $editResponse->assertStatus(200);
+        $editResponse->assertSee('নিউজ পোর্টাল প্যাকেজ');
+
+        // 5. Update package
+        $updateResponse = $this->actingAs($user)->put("/admin/packages/{$package->id}", [
+            'name' => 'নিউজ পোর্টাল প্রো প্যাকেজ',
+            'slug' => 'news-portal-package',
+            'price' => '15000',
+            'currency' => '৳',
+            'period' => '/৩ দিনের মধ্যে ডেলিভারি',
+            'features_text' => "লারাভেল ব্যাকএন্ড\nফ্রি ডোমেন ও হোস্টিং",
+            'button_text' => 'এখনই নিন',
+            'button_url' => 'https://wa.me/8801849832178',
+            'is_featured' => 0,
+            'is_active' => 1,
+            'order' => 2,
+        ]);
+
+        $updateResponse->assertRedirect('/admin/packages');
+        $this->assertDatabaseHas('packages', [
+            'id' => $package->id,
+            'name' => 'নিউজ পোর্টাল প্রো প্যাকেজ',
+            'price' => '15000',
+            'button_text' => 'এখনই নিন',
+        ]);
+
+        // 6. Delete package
+        $deleteResponse = $this->actingAs($user)->delete("/admin/packages/{$package->id}");
+        $deleteResponse->assertRedirect('/admin/packages');
+        $this->assertDatabaseMissing('packages', [
+            'id' => $package->id,
         ]);
     }
 }

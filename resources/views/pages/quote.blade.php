@@ -71,7 +71,7 @@
                                 <div class="col-xl-12">
                                     <div class="contact_form_input">
                                         <span><i class="fas fa-list"></i></span>
-                                        <input type="text" name="subject" placeholder="প্রজেক্ট বা সার্ভিসের ধরন (উদা: ই-কমার্স ওয়েবসাইট, স্কুল সফটওয়্যার)" value="{{ old('subject') }}" required>
+                                        <input type="text" name="subject" placeholder="প্রজেক্ট বা সার্ভিসের ধরন (উদা: ই-কমার্স ওয়েবসাইট, স্কুল সফটওয়্যার)" value="{{ old('subject', request('package') ? 'প্যাকেজ অর্ডার: '.request('package') : '') }}" required>
                                     </div>
                                     @error('subject')
                                         <small class="text-danger d-block mt-1">{{ $message }}</small>

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Achievement;
+use App\Models\Package;
 use App\Models\Page;
 use App\Models\Portfolio;
 use App\Models\Post;
@@ -27,11 +28,13 @@ class PageTest extends TestCase
         Post::factory()->count(3)->create(['is_published' => true]);
         TeamMember::factory()->count(2)->create(['is_active' => true]);
         Achievement::factory()->count(2)->create(['is_active' => true]);
+        Package::factory()->count(2)->create(['is_active' => true]);
 
         $routes = [
             '/',
             '/about',
             '/services',
+            '/packages',
             '/portfolio',
             '/blog',
             '/contact',
@@ -383,5 +386,41 @@ class PageTest extends TestCase
         $response->assertSee('কাস্টম আইটি সল্যুশন ও ক্লাউড প্রযুক্তি নিয়ে আমরা কাজ করি।');
         $response->assertSee('১০ বছরের আন্তর্জাতিক অভিজ্ঞতা');
         $response->assertSee('২৪/৭ ক্লায়েন্ট হেল্পডেস্ক');
+    }
+
+    /**
+     * Test packages page renders active packages and pricing details.
+     */
+    public function test_packages_page_renders_active_packages_and_hides_inactive(): void
+    {
+        $activePackage = Package::factory()->create([
+            'name' => 'সুপার ই-কমার্স প্যাকেজ',
+            'price' => '15000',
+            'currency' => '৳',
+            'period' => '/৭ দিনের মধ্যে ডেলিভারি',
+            'features' => ['লারাভেল ১০/১১ ব্যাকএন্ড', 'পেমেন্ট গেটওয়ে ইন্টিগ্রেশন'],
+            'is_featured' => true,
+            'is_active' => true,
+        ]);
+
+        $inactivePackage = Package::factory()->create([
+            'name' => 'লুকানো ড্রাফট প্যাকেজ',
+            'is_active' => false,
+        ]);
+
+        $response = $this->get('/packages');
+
+        $response->assertStatus(200);
+        $response->assertSee('সুপার ই-কমার্স প্যাকেজ');
+        $response->assertSee('৳15000');
+        $response->assertSee('/৭ দিনের মধ্যে ডেলিভারি');
+        $response->assertSee('লারাভেল ১০/১১ ব্যাকএন্ড');
+        $response->assertSee('পেমেন্ট গেটওয়ে ইন্টিগ্রেশন');
+        $response->assertSee('single_pricing active');
+        $response->assertDontSee('লুকানো ড্রাফট প্যাকেজ');
+
+        // Test alias redirect
+        $aliasResponse = $this->get('/package');
+        $aliasResponse->assertRedirect('/packages');
     }
 }

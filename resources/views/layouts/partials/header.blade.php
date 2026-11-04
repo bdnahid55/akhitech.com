@@ -75,6 +75,9 @@
                     <a class="nav-link {{ request()->routeIs('services*') ? 'active' : '' }}" href="{{ route('services') }}">সার্ভিস</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('packages*') ? 'active' : '' }}" href="{{ route('packages') }}">প্যাকেজ</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('portfolio*') ? 'active' : '' }}" href="{{ route('portfolio') }}">পোর্টফোলিও</a>
                 </li>
                 <li class="nav-item">

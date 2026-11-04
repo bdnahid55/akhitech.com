@@ -19,6 +19,18 @@
             </div>
         </div>
         <div class="col-lg-3 col-6">
+            <div class="small-box bg-primary">
+                <div class="inner">
+                    <h3>{{ $stats['packages'] }}</h3>
+                    <p>প্রাইসিং প্যাকেজ</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-tags"></i>
+                </div>
+                <a href="{{ route('admin.packages.index') }}" class="small-box-footer">প্যাকেজ তালিকা <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
             <div class="small-box bg-success">
                 <div class="inner">
                     <h3>{{ $stats['portfolios'] }}</h3>

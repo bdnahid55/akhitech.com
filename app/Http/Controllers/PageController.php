@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Achievement;
 use App\Models\Inquiry;
+use App\Models\Package;
 use App\Models\Page;
 use App\Models\Portfolio;
 use App\Models\Post;
@@ -54,6 +55,16 @@ class PageController extends Controller
         $services = Service::where('is_active', true)->orderBy('order')->get();
 
         return view('pages.services', compact('services'));
+    }
+
+    /**
+     * Display the packages/pricing catalog page.
+     */
+    public function packages(): View
+    {
+        $packages = Package::where('is_active', true)->orderBy('order')->latest()->get();
+
+        return view('pages.packages', compact('packages'));
     }
 
     /**
@@ -166,6 +177,7 @@ class PageController extends Controller
             route('home'),
             route('about'),
             route('services'),
+            route('packages'),
             route('portfolio'),
             route('blog'),
             route('contact'),
