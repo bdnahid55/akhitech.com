@@ -47,16 +47,6 @@ class PageController extends Controller
     }
 
     /**
-     * Display the full team list page.
-     */
-    public function team(): View
-    {
-        $teamMembers = TeamMember::where('is_active', true)->orderBy('order')->get();
-
-        return view('pages.team', compact('teamMembers'));
-    }
-
-    /**
      * Display the services catalog page.
      */
     public function services(): View
@@ -176,7 +166,6 @@ class PageController extends Controller
             route('home'),
             route('about'),
             route('services'),
-            route('team'),
             route('portfolio'),
             route('blog'),
             route('contact'),

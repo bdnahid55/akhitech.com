@@ -32,7 +32,6 @@ class PageTest extends TestCase
             '/',
             '/about',
             '/services',
-            '/team',
             '/portfolio',
             '/blog',
             '/contact',
@@ -45,6 +44,15 @@ class PageTest extends TestCase
             $response = $this->get($route);
             $response->assertStatus(200);
         }
+    }
+
+    /**
+     * Test team route is removed and returns 404.
+     */
+    public function test_team_route_is_removed(): void
+    {
+        $response = $this->get('/team');
+        $response->assertStatus(404);
     }
 
     /**
