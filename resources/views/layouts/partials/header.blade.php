@@ -81,29 +81,35 @@
                     <a class="nav-link {{ request()->routeIs('blog*') ? 'active' : '' }}" href="{{ route('blog') }}">ব্লগ</a>
                 </li>
 
-                <!-- Dynamic Header Menu Items & Dropdowns -->
-                @if (isset($headerPages) && $headerPages->isNotEmpty())
-                    @foreach ($headerPages as $page)
-                        @if ($page->children->isNotEmpty())
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">{{ $page->title }} +</a>
-                                <ul class="droap_menu">
-                                    @foreach ($page->children as $child)
-                                        <li>
-                                            <a href="{{ route('page.show', $child->slug) }}">{{ $child->title }}</a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </li>
-                        @else
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->is('page/'.$page->slug) ? 'active' : '' }}" href="{{ route('page.show', $page->slug) }}">
-                                    {{ $page->title }}
-                                </a>
-                            </li>
+                <!-- Dynamic Header Pages Dropdown -->
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->is('page/*') || request()->routeIs('team*') ? 'active' : '' }}" href="#">পেইজ +</a>
+                    <ul class="droap_menu">
+                        <li>
+                            <a class="{{ request()->routeIs('team*') ? 'active' : '' }}" href="{{ route('team') }}">আমাদের টিম</a>
+                        </li>
+                        @if (isset($headerPages) && $headerPages->isNotEmpty())
+                            @foreach ($headerPages as $page)
+                                @if ($page->slug !== 'our-team')
+                                    <li>
+                                        <a class="{{ request()->is('page/'.$page->slug) ? 'active' : '' }}" href="{{ route('page.show', $page->slug) }}">
+                                            {{ $page->title }}
+                                        </a>
+                                    </li>
+                                    @if ($page->children && $page->children->isNotEmpty())
+                                        @foreach ($page->children as $child)
+                                            <li>
+                                                <a class="pl-4 {{ request()->is('page/'.$child->slug) ? 'active' : '' }}" href="{{ route('page.show', $child->slug) }}">
+                                                    &nbsp;&nbsp;↳ {{ $child->title }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    @endif
+                                @endif
+                            @endforeach
                         @endif
-                    @endforeach
-                @endif
+                    </ul>
+                </li>
 
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('contact') ? 'active' : '' }}" href="{{ route('contact') }}">যোগাযোগ</a>

@@ -1284,7 +1284,7 @@ header {
 .achievement_item {
   text-align: center;
   padding: 75px 40px 40px 40px;
-  background: url(../images/achivment.png) no-repeat center/cover;
+  background: #fff2f2;
   border-radius: 10px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;

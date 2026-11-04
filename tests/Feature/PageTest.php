@@ -166,6 +166,8 @@ class PageTest extends TestCase
 
         $response = $this->get('/');
         $response->assertStatus(200);
+        $response->assertSee('পেইজ +');
+        $response->assertSee('droap_menu');
         $response->assertSee('কোম্পানি ইনফো');
         $response->assertSee('আমাদের অর্জন');
         $response->assertSee('সাপোর্ট সেন্টার');
