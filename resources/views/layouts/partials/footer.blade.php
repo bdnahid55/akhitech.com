@@ -1,7 +1,7 @@
 <!--==============================
     FOOTER START
 ===============================-->
-<footer class="footer pt_100 xs_pt_60" style="background: url({{ asset('assets/frontend/images/Features-BG.jpg') }}) no-repeat center/cover;">
+<footer class="footer pt_100 xs_pt_60">
     <div class="container">
         <!-- Footer Contact Info Bar -->
         <div class="row pb_55">

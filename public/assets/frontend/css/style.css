@@ -1,7 +1,7 @@
-/* 
+/*
 ***************************************
 Template Name: Fax-IT - Technology & IT Solutions HTML Template.
-Author: ThemeFax 
+Author: ThemeFax
 Author Email: themefaxbd@gmail.com
 Version: 1.0
 Description: Fax-IT - Technology & IT Solutions HTML Template is a cutting-edge, multipurpose template created especially for IT services, technology, cyber security, IT solutions, and consulting companies associated with any business website. This is quite adaptable and looks great on mobile devices. EduFax Template has a fully responsive layout. Fax-IT fits perfectly on various displays and resolutions from regular desktop screens to tablets, iPads, iPhones, and small mobile devices.
@@ -9,7 +9,7 @@ Description: Fax-IT - Technology & IT Solutions HTML Template is a cutting-edge,
 
 CSS INDEX
 ===================================
-01. GLOBAL CSS 
+01. GLOBAL CSS
 02. HOME PAGE
 03. HOME PAGE 2
 04. SERVICES DETAILS
@@ -18,13 +18,13 @@ CSS INDEX
 07. BLOG DETAILS
 08. FAQs
 09. PRIVACY POLICY
-10. PRICING 
+10. PRICING
 11. SHOP
-12. SHOP DETAILS 
+12. SHOP DETAILS
 13. SIGN IN
-14. 404 
-15. CART VIEW 
-16. CHECKOUT 
+14. 404
+15. CART VIEW
+16. CHECKOUT
 17. PAYMENT
 18. CONTACT
 
@@ -556,8 +556,8 @@ header {
   font-size: 18px;
   font-weight: 500;
   margin: 0;
-  line-height: 90px;
-  padding: 0px 15px;
+  line-height: 21px;
+  padding: 0px 9px;
   transition: all linear .3s;
   -webkit-transition: all linear .3s;
   -moz-transition: all linear .3s;
@@ -1527,7 +1527,7 @@ header {
 
 /* services start */
 .services {
-  background: #04885f;
+  background: #04885f !important;
   position: relative;
   overflow: hidden;
 }
