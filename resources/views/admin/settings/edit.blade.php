@@ -1,0 +1,217 @@
+@extends('admin.layouts.app')
+
+@section('title', 'ওয়েবসাইট সেটিংস')
+@section('page_title', 'ওয়েবসাইট সেটিংস ও কনফিগারেশন')
+
+@section('content')
+    <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-primary card-outline card-outline-tabs shadow-sm">
+                    <div class="card-header p-0 border-bottom-0">
+                        <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active font-weight-bold" id="tab-general-link" data-toggle="pill" href="#tab-general" role="tab">
+                                    <i class="fas fa-image mr-1"></i> সাধারণ ও লোগো
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link font-weight-bold" id="tab-contact-link" data-toggle="pill" href="#tab-contact" role="tab">
+                                    <i class="fas fa-address-book mr-1"></i> যোগাযোগ তথ্য
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link font-weight-bold" id="tab-social-link" data-toggle="pill" href="#tab-social" role="tab">
+                                    <i class="fas fa-share-alt mr-1"></i> সোশ্যাল মিডিয়া
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link font-weight-bold" id="tab-footer-link" data-toggle="pill" href="#tab-footer" role="tab">
+                                    <i class="fas fa-shoe-prints mr-1"></i> ফুটার ও কপিরাইট
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link font-weight-bold" id="tab-seo-link" data-toggle="pill" href="#tab-seo" role="tab">
+                                    <i class="fas fa-search mr-1"></i> গ্লোবাল এসইও (SEO)
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="tab-content" id="custom-tabs-four-tabContent">
+                            <!-- Tab 1: General & Logo -->
+                            <div class="tab-pane fade show active" id="tab-general" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label for="site_name">ওয়েবসাইটের নাম (Site Name)</label>
+                                        <input type="text" name="site_name" id="site_name" class="form-control" value="{{ old('site_name', $settings['site_name'] ?? '') }}" required>
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label for="site_tagline">ট্যাগলাইন (Tagline)</label>
+                                        <input type="text" name="site_tagline" id="site_tagline" class="form-control" value="{{ old('site_tagline', $settings['site_tagline'] ?? '') }}">
+                                    </div>
+                                </div>
+
+                                <div class="row mt-3">
+                                    <div class="col-md-4 form-group">
+                                        <label for="header_logo">হেডার লোগো (Header Logo)</label>
+                                        @if (!empty($settings['header_logo']))
+                                            <div class="p-2 bg-light border rounded mb-2 text-center">
+                                                <img src="{{ str_starts_with($settings['header_logo'], 'http') ? $settings['header_logo'] : asset($settings['header_logo']) }}" alt="Header Logo" style="max-height: 50px; max-width: 100%;">
+                                            </div>
+                                        @endif
+                                        <input type="file" name="header_logo" id="header_logo" class="form-control-file" accept="image/*">
+                                        <small class="text-muted">প্রস্তাবিত সাইজ: 180x45px (PNG/WebP/SVG)</small>
+                                    </div>
+
+                                    <div class="col-md-4 form-group">
+                                        <label for="footer_logo">ফুটার লোগো (Footer Logo)</label>
+                                        @if (!empty($settings['footer_logo']))
+                                            <div class="p-2 bg-dark rounded mb-2 text-center">
+                                                <img src="{{ str_starts_with($settings['footer_logo'], 'http') ? $settings['footer_logo'] : asset($settings['footer_logo']) }}" alt="Footer Logo" style="max-height: 50px; max-width: 100%;">
+                                            </div>
+                                        @endif
+                                        <input type="file" name="footer_logo" id="footer_logo" class="form-control-file" accept="image/*">
+                                        <small class="text-muted">ডার্ক ব্যাকগ্রাউন্ডের জন্য উপযোগী লোগো</small>
+                                    </div>
+
+                                    <div class="col-md-4 form-group">
+                                        <label for="favicon">ফেভিকন (Favicon)</label>
+                                        @if (!empty($settings['favicon']))
+                                            <div class="p-2 bg-light border rounded mb-2 text-center">
+                                                <img src="{{ str_starts_with($settings['favicon'], 'http') ? $settings['favicon'] : asset($settings['favicon']) }}" alt="Favicon" style="max-height: 32px;">
+                                            </div>
+                                        @endif
+                                        <input type="file" name="favicon" id="favicon" class="form-control-file" accept="image/*,.ico">
+                                        <small class="text-muted">32x32 বা 64x64 (ICO/PNG)</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab 2: Contact Info -->
+                            <div class="tab-pane fade" id="tab-contact" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label for="contact_phone"><i class="fas fa-phone mr-1"></i> যোগাযোগের ফোন / হটলাইন</label>
+                                        <input type="text" name="contact_phone" id="contact_phone" class="form-control" value="{{ old('contact_phone', $settings['contact_phone'] ?? '') }}">
+                                    </div>
+
+                                    <div class="col-md-6 form-group">
+                                        <label for="contact_email"><i class="fas fa-envelope mr-1"></i> অফিসিয়াল ইমেইল</label>
+                                        <input type="email" name="contact_email" id="contact_email" class="form-control" value="{{ old('contact_email', $settings['contact_email'] ?? '') }}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="contact_address"><i class="fas fa-map-marker-alt mr-1"></i> অফিসের পূর্ণাঙ্গ ঠিকানা</label>
+                                    <textarea name="contact_address" id="contact_address" rows="3" class="form-control">{{ old('contact_address', $settings['contact_address'] ?? '') }}</textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="contact_map_iframe"><i class="fas fa-map mr-1"></i> গুগল ম্যাপ এমবেড কোড (Google Maps Iframe / URL)</label>
+                                    <input type="text" name="contact_map_iframe" id="contact_map_iframe" class="form-control" value="{{ old('contact_map_iframe', $settings['contact_map_iframe'] ?? '') }}">
+                                </div>
+                            </div>
+
+                            <!-- Tab 3: Social Media -->
+                            <div class="tab-pane fade" id="tab-social" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label for="social_facebook"><i class="fab fa-facebook text-primary mr-1"></i> ফেসবুক পেজ URL</label>
+                                        <input type="url" name="social_facebook" id="social_facebook" class="form-control" value="{{ old('social_facebook', $settings['social_facebook'] ?? '') }}" placeholder="https://facebook.com/...">
+                                    </div>
+
+                                    <div class="col-md-6 form-group">
+                                        <label for="social_twitter"><i class="fab fa-twitter text-info mr-1"></i> টুইটার / X URL</label>
+                                        <input type="url" name="social_twitter" id="social_twitter" class="form-control" value="{{ old('social_twitter', $settings['social_twitter'] ?? '') }}" placeholder="https://x.com/...">
+                                    </div>
+
+                                    <div class="col-md-6 form-group">
+                                        <label for="social_linkedin"><i class="fab fa-linkedin text-primary mr-1"></i> লিংকডইন URL</label>
+                                        <input type="url" name="social_linkedin" id="social_linkedin" class="form-control" value="{{ old('social_linkedin', $settings['social_linkedin'] ?? '') }}" placeholder="https://linkedin.com/company/...">
+                                    </div>
+
+                                    <div class="col-md-6 form-group">
+                                        <label for="social_youtube"><i class="fab fa-youtube text-danger mr-1"></i> ইউটিউব চ্যানেল URL</label>
+                                        <input type="url" name="social_youtube" id="social_youtube" class="form-control" value="{{ old('social_youtube', $settings['social_youtube'] ?? '') }}" placeholder="https://youtube.com/@...">
+                                    </div>
+
+                                    <div class="col-md-6 form-group">
+                                        <label for="social_instagram"><i class="fab fa-instagram text-danger mr-1"></i> ইনস্টাগ্রাম URL</label>
+                                        <input type="url" name="social_instagram" id="social_instagram" class="form-control" value="{{ old('social_instagram', $settings['social_instagram'] ?? '') }}" placeholder="https://instagram.com/...">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab 4: Footer & Copyright -->
+                            <div class="tab-pane fade" id="tab-footer" role="tabpanel">
+                                <div class="form-group">
+                                    <label for="footer_about_text">ফুটার সংক্ষিপ্ত পরিচিতি টেক্সট</label>
+                                    <textarea name="footer_about_text" id="footer_about_text" rows="4" class="form-control">{{ old('footer_about_text', $settings['footer_about_text'] ?? '') }}</textarea>
+                                    <small class="text-muted">ফুটারের বাম পাশে লোগোর নিচে প্রদর্শিত হবে।</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="footer_copyright">কপিরাইট টেক্সট</label>
+                                    <input type="text" name="footer_copyright" id="footer_copyright" class="form-control" value="{{ old('footer_copyright', $settings['footer_copyright'] ?? '') }}" placeholder="© 2026 সকল কিছুর স্বত্বাধিকার Akhitech">
+                                </div>
+                            </div>
+
+                            <!-- Tab 5: SEO -->
+                            <div class="tab-pane fade" id="tab-seo" role="tabpanel">
+                                <div class="form-group">
+                                    <label for="default_meta_title">ডিফল্ট এসইও মেটা টাইটেল (Default Meta Title)</label>
+                                    <input type="text" name="default_meta_title" id="default_meta_title" class="form-control" value="{{ old('default_meta_title', $settings['default_meta_title'] ?? '') }}">
+                                    <small class="text-muted">নির্দিষ্ট পেজে মেটা টাইটেল না থাকলে এটি ব্যবহৃত হবে।</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="default_meta_description">ডিফল্ট মেটা ডেসক্রিপশন (Default Meta Description)</label>
+                                    <textarea name="default_meta_description" id="default_meta_description" rows="3" class="form-control">{{ old('default_meta_description', $settings['default_meta_description'] ?? '') }}</textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="default_meta_keywords">ডিফল্ট মেটা কি-ওয়ার্ডস (Keywords)</label>
+                                    <input type="text" name="default_meta_keywords" id="default_meta_keywords" class="form-control" value="{{ old('default_meta_keywords', $settings['default_meta_keywords'] ?? '') }}" placeholder="কমা দিয়ে আলাদা করুন">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="default_og_image">ডিফল্ট ওপেনগ্রাফ / সোশ্যাল শেয়ার ছবি (Default OG Image)</label>
+                                    @if (!empty($settings['default_og_image']))
+                                        <div class="mb-2">
+                                            <img src="{{ str_starts_with($settings['default_og_image'], 'http') ? $settings['default_og_image'] : asset($settings['default_og_image']) }}" alt="Default OG" class="img-thumbnail" style="max-height: 100px;">
+                                        </div>
+                                    @endif
+                                    <input type="file" name="default_og_image" id="default_og_image" class="form-control-file" accept="image/*">
+                                    <small class="text-muted">ফেসবুক, টুইটার ও লিংকডইনে প্রিভিউয়ের জন্য 1200x630px সাইজ প্রস্তাবিত।</small>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label for="google_analytics_id">গুগল অ্যানালিটিক্স আইডি (Google Analytics Measurement ID)</label>
+                                        <input type="text" name="google_analytics_id" id="google_analytics_id" class="form-control" value="{{ old('google_analytics_id', $settings['google_analytics_id'] ?? '') }}" placeholder="যেমন: G-XXXXXXXXXX">
+                                    </div>
+
+                                    <div class="col-md-6 form-group">
+                                        <label for="google_search_console_code">গুগল সার্চ কনসোল ভেরিফিকেশন কোড (Search Console Code)</label>
+                                        <input type="text" name="google_search_console_code" id="google_search_console_code" class="form-control" value="{{ old('google_search_console_code', $settings['google_search_console_code'] ?? '') }}" placeholder="google-site-verification কোড">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer bg-light text-right">
+                        <button type="submit" class="btn btn-primary px-4 font-weight-bold">
+                            <i class="fas fa-save mr-1"></i> সকল সেটিংস সংরক্ষণ করুন
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+@endsection
