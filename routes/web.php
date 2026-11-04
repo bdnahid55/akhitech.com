@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 use App\Http\Controllers\Admin\SubscriberController as AdminSubscriberController;
+use App\Http\Controllers\Admin\TeamMemberController as AdminTeamMemberController;
 use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::get('/team', [PageController::class, 'team'])->name('team');
 Route::get('/services', [PageController::class, 'services'])->name('services');
 Route::get('/portfolio', [PageController::class, 'portfolio'])->name('portfolio');
 Route::get('/portfolio/{slug}', [PageController::class, 'portfolioDetails'])->name('portfolio.show');
@@ -72,6 +74,9 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     // Testimonials CRUD
     Route::resource('testimonials', AdminTestimonialController::class);
+
+    // Team Members CRUD
+    Route::resource('team', AdminTeamMemberController::class);
 
     // Inquiries & Messages
     Route::get('inquiries', [AdminInquiryController::class, 'index'])->name('inquiries.index');

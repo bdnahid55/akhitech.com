@@ -34,6 +34,11 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link font-weight-bold" id="tab-team-link" data-toggle="pill" href="#tab-team" role="tab">
+                                    <i class="fas fa-users mr-1"></i> টিম সেকশন
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link font-weight-bold" id="tab-contact-link" data-toggle="pill" href="#tab-contact" role="tab">
                                     <i class="fas fa-address-book mr-1"></i> যোগাযোগ তথ্য
                                 </a>
@@ -283,6 +288,22 @@
                                 <div class="callout callout-info mt-4">
                                     <h5><i class="fas fa-info-circle mr-1"></i> প্রশংসাপত্র আইটেমসমূহ পরিচালনা:</h5>
                                     <p class="mb-0">নির্দিষ্ট ক্লায়েন্ট রিভিউ, ছবি এবং রেটিং যোগ বা পরিবর্তনের জন্য সাইডবারের <strong>"কনটেন্ট ম্যানেজমেন্ট > প্রশংসাপত্র / রিভিউ"</strong> মেনু ব্যবহার করুন।</p>
+                                </div>
+                            </div>
+
+                            <!-- Tab: Team Section -->
+                            <div class="tab-pane fade" id="tab-team" role="tabpanel">
+                                <div class="form-group">
+                                    <label for="team_subtitle">টিম সেকশন সাব-শিরোনাম (Subtitle)</label>
+                                    <input type="text" name="team_subtitle" id="team_subtitle" class="form-control" value="{{ old('team_subtitle', $settings['team_subtitle'] ?? 'আমাদের টিম') }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="team_title">টিম সেকশন মূল শিরোনাম (Main Title)</label>
+                                    <input type="text" name="team_title" id="team_title" class="form-control" value="{{ old('team_title', $settings['team_title'] ?? 'আমাদের সকল টিম মেম্বাদেরকে দেখুন') }}">
+                                </div>
+                                <div class="callout callout-info mt-4">
+                                    <h5><i class="fas fa-info-circle mr-1"></i> টিম মেম্বারদের পরিচালনা:</h5>
+                                    <p class="mb-0">নতুন সদস্য যোগ করা, ছবি, পদবী, সোশ্যাল লিংক বা বায়ো পরিবর্তনের জন্য সাইডবারের <strong>"কনটেন্ট ম্যানেজমেন্ট > টিম মেম্বারস"</strong> মেনু ব্যবহার করুন।</p>
                                 </div>
                             </div>
 

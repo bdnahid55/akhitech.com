@@ -6,6 +6,7 @@ use App\Models\Page;
 use App\Models\Portfolio;
 use App\Models\Post;
 use App\Models\Service;
+use App\Models\TeamMember;
 use App\Models\Testimonial;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -22,11 +23,13 @@ class PageTest extends TestCase
         Service::factory()->count(3)->create(['is_active' => true]);
         Portfolio::factory()->count(3)->create(['is_active' => true]);
         Post::factory()->count(3)->create(['is_published' => true]);
+        TeamMember::factory()->count(2)->create(['is_active' => true]);
 
         $routes = [
             '/',
             '/about',
             '/services',
+            '/team',
             '/portfolio',
             '/blog',
             '/contact',
@@ -283,5 +286,36 @@ class PageTest extends TestCase
         $response->assertSee('উদ্যোক্তা');
         $response->assertSee('আমরা আমাদের নতুন ওয়েবসাইটের সমস্ত দিক নিয়ে খুব মুগ্ধ হয়েছি।');
         $response->assertDontSee('লুকানো ব্যক্তি');
+    }
+
+    /**
+     * Test homepage and about page render dynamic team members correctly.
+     */
+    public function test_homepage_and_about_render_dynamic_team_members(): void
+    {
+        $member = TeamMember::factory()->create([
+            'name' => 'Md Nazrul Islam (Sayed)',
+            'designation' => 'CEO',
+            'is_active' => true,
+        ]);
+
+        $inactiveMember = TeamMember::factory()->create([
+            'name' => 'লুকানো টিম মেম্বার',
+            'is_active' => false,
+        ]);
+
+        // 1. Homepage
+        $homeResponse = $this->get('/');
+        $homeResponse->assertStatus(200);
+        $homeResponse->assertSee('Md Nazrul Islam (Sayed)');
+        $homeResponse->assertSee('CEO');
+        $homeResponse->assertDontSee('লুকানো টিম মেম্বার');
+
+        // 2. About page
+        $aboutResponse = $this->get('/about');
+        $aboutResponse->assertStatus(200);
+        $aboutResponse->assertSee('Md Nazrul Islam (Sayed)');
+        $aboutResponse->assertSee('CEO');
+        $aboutResponse->assertDontSee('লুকানো টিম মেম্বার');
     }
 }

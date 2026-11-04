@@ -208,6 +208,60 @@
     ===============================-->
 
     <!--==============================
+        TEAM START
+    ===============================-->
+    <section class="home_2_team pt_115 xs_pt_75 pb_120 xs_pb_80">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="section_heading pb_20">
+                        <h3>{{ $siteSettings['team_subtitle'] ?? 'আমাদের টিম' }}</h3>
+                        <h2>{{ $siteSettings['team_title'] ?? 'আমাদের সকল টিম মেম্বাদেরকে দেখুন' }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                @forelse ($teamMembers as $member)
+                    <div class="col-xl-3 col-sm-6 col-lg-4 wow fadeInUp" data-wow-duration="1s">
+                        <div class="home_2_team_item">
+                            <div class="image">
+                                <span>
+                                    <img src="{{ $member->image ? asset($member->image) : asset('assets/front/img/team/17384272841396583989.png') }}" alt="{{ $member->name }}" class="img-fluid w-100">
+                                </span>
+                            </div>
+                            <div class="text">
+                                <ul>
+                                    @if ($member->facebook)
+                                        <li><a href="{{ $member->facebook }}" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+                                    @endif
+                                    @if ($member->twitter)
+                                        <li><a href="{{ $member->twitter }}" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                                    @endif
+                                    @if ($member->behance)
+                                        <li><a href="{{ $member->behance }}" target="_blank"><i class="fab fa-behance"></i></a></li>
+                                    @endif
+                                    @if ($member->linkedin)
+                                        <li><a href="{{ $member->linkedin }}" target="_blank"><i class="fab fa-linkedin-in"></i></a></li>
+                                    @endif
+                                </ul>
+                                <a class="link" href="javascript:void(0)">{{ $member->name }}</a>
+                                <p>{{ $member->designation }}</p>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="col-12 text-center py-4">
+                        <p class="text-muted">কোনো টিম মেম্বার পাওয়া যায়নি।</p>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </section>
+    <!--==============================
+        TEAM END
+    ===============================-->
+
+    <!--==============================
         TESTIMONIAL START
     ===============================-->
     <section class="home_2_testimonial pt_115 xs_pt_75 pb_120 xs_pb_80" style="background: url({{ asset('assets/frontend/images/testimonial_2_bg.png') }});">

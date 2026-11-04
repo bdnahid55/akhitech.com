@@ -76,6 +76,10 @@ class SettingController extends Controller
             'testimonial_subtitle' => ['nullable', 'string', 'max:255'],
             'testimonial_title' => ['nullable', 'string', 'max:255'],
 
+            // Team Settings
+            'team_subtitle' => ['nullable', 'string', 'max:255'],
+            'team_title' => ['nullable', 'string', 'max:255'],
+
             // Footer & SEO
             'footer_about_text' => ['nullable', 'string', 'max:1000'],
             'footer_copyright' => ['nullable', 'string', 'max:255'],

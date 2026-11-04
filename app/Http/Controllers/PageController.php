@@ -10,6 +10,7 @@ use App\Models\Portfolio;
 use App\Models\Post;
 use App\Models\Service;
 use App\Models\Subscriber;
+use App\Models\TeamMember;
 use App\Models\Testimonial;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ use Illuminate\View\View;
 class PageController extends Controller
 {
     /**
-     * Display the home page with dynamic services, portfolios, and blogs.
+     * Display the home page with dynamic services, portfolios, blogs, testimonials, and team.
      */
     public function home(): View
     {
@@ -27,16 +28,29 @@ class PageController extends Controller
         $portfolios = Portfolio::where('is_active', true)->take(6)->get();
         $posts = Post::where('is_published', true)->latest('published_at')->take(3)->get();
         $testimonials = Testimonial::where('is_active', true)->orderBy('order')->latest()->get();
+        $teamMembers = TeamMember::where('is_active', true)->orderBy('order')->get();
 
-        return view('pages.home', compact('services', 'portfolios', 'posts', 'testimonials'));
+        return view('pages.home', compact('services', 'portfolios', 'posts', 'testimonials', 'teamMembers'));
     }
 
     /**
-     * Display the about page.
+     * Display the about page with company details and team members.
      */
     public function about(): View
     {
-        return view('pages.about');
+        $teamMembers = TeamMember::where('is_active', true)->orderBy('order')->get();
+
+        return view('pages.about', compact('teamMembers'));
+    }
+
+    /**
+     * Display the full team list page.
+     */
+    public function team(): View
+    {
+        $teamMembers = TeamMember::where('is_active', true)->orderBy('order')->get();
+
+        return view('pages.team', compact('teamMembers'));
     }
 
     /**
@@ -159,6 +173,7 @@ class PageController extends Controller
             route('home'),
             route('about'),
             route('services'),
+            route('team'),
             route('portfolio'),
             route('blog'),
             route('contact'),

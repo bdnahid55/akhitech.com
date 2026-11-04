@@ -55,6 +55,10 @@ class SettingSeeder extends Seeder
             ['key' => 'testimonial_subtitle', 'value' => 'প্রশংসা সমূহ', 'group' => 'testimonial'],
             ['key' => 'testimonial_title', 'value' => 'আমাদের ক্লায়েন্টগন কি বলে', 'group' => 'testimonial'],
 
+            // Team Section
+            ['key' => 'team_subtitle', 'value' => 'আমাদের টিম', 'group' => 'team'],
+            ['key' => 'team_title', 'value' => 'আমাদের সকল টিম মেম্বারদের দেখুন', 'group' => 'team'],
+
             // Contact
             ['key' => 'contact_phone', 'value' => '+8801849832178', 'group' => 'contact'],
             ['key' => 'contact_email', 'value' => 'info@akhitech.com', 'group' => 'contact'],

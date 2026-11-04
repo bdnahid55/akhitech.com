@@ -53,6 +53,13 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a href="{{ route('admin.team.index') }}" class="nav-link {{ request()->routeIs('admin.team*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>টিম মেম্বারস</p>
+                    </a>
+                </li>
+
                 <li class="nav-header">গ্রাহক ও অনুসন্ধান</li>
 
                 <li class="nav-item">

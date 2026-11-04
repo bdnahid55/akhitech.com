@@ -8,6 +8,7 @@ use App\Models\Portfolio;
 use App\Models\Service;
 use App\Models\Setting;
 use App\Models\Subscriber;
+use App\Models\TeamMember;
 use App\Models\Testimonial;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -258,6 +259,8 @@ class AdminTest extends TestCase
             'footer_copyright' => '© 2026 Akhitech Solutions Ltd. All rights reserved.',
             'testimonial_subtitle' => 'গ্রাহকদের মতামত',
             'testimonial_title' => 'আমাদের ক্লায়েন্টরা যা বলছেন',
+            'team_subtitle' => 'আমাদের স্পেশালিস্ট টিম',
+            'team_title' => 'দক্ষ ও অভিজ্ঞ টিম মেম্বারবৃন্দ',
             'default_meta_title' => 'Akhitech Solutions | শীর্ষ আইটি সেবা',
             'default_meta_description' => 'বিশ্বমানের সফটওয়্যার সমাধান।',
         ]);
@@ -268,6 +271,8 @@ class AdminTest extends TestCase
         $this->assertEquals('১০ বছরের সমৃদ্ধ পেশাদার অভিজ্ঞতা', Setting::get('about_title'));
         $this->assertEquals('গ্রাহকদের মতামত', Setting::get('testimonial_subtitle'));
         $this->assertEquals('আমাদের ক্লায়েন্টরা যা বলছেন', Setting::get('testimonial_title'));
+        $this->assertEquals('আমাদের স্পেশালিস্ট টিম', Setting::get('team_subtitle'));
+        $this->assertEquals('দক্ষ ও অভিজ্ঞ টিম মেম্বারবৃন্দ', Setting::get('team_title'));
         $this->assertEquals('+8801999999999', Setting::get('contact_phone'));
         $this->assertEquals('hello@akhitech.com', Setting::get('contact_email'));
     }
@@ -333,6 +338,73 @@ class AdminTest extends TestCase
         $deleteResponse->assertRedirect('/admin/testimonials');
         $this->assertDatabaseMissing('testimonials', [
             'id' => $testimonial->id,
+        ]);
+    }
+
+    /**
+     * Admin can view, create, edit, and delete team members.
+     */
+    public function test_admin_can_manage_team_members(): void
+    {
+        $user = User::factory()->create();
+
+        // 1. View team index
+        $indexResponse = $this->actingAs($user)->get('/admin/team');
+        $indexResponse->assertStatus(200);
+
+        // 2. View create form
+        $createResponse = $this->actingAs($user)->get('/admin/team/create');
+        $createResponse->assertStatus(200);
+
+        // 3. Store new team member
+        $storeResponse = $this->actingAs($user)->post('/admin/team', [
+            'name' => 'মীর সাব্বির',
+            'slug' => 'mir-sabbir',
+            'designation' => 'সফটওয়্যার ইঞ্জিনিয়ার',
+            'bio' => 'ফুল-স্ট্যাক ওয়েব ডেভেলপার এবং আর্কিটেক্ট।',
+            'facebook' => 'https://facebook.com/mirsabbir',
+            'linkedin' => 'https://linkedin.com/in/mirsabbir',
+            'order' => 1,
+            'is_active' => 1,
+        ]);
+
+        $storeResponse->assertRedirect('/admin/team');
+        $this->assertDatabaseHas('team_members', [
+            'name' => 'মীর সাব্বির',
+            'slug' => 'mir-sabbir',
+            'designation' => 'সফটওয়্যার ইঞ্জিনিয়ার',
+        ]);
+
+        $member = TeamMember::where('slug', 'mir-sabbir')->firstOrFail();
+
+        // 4. View edit form
+        $editResponse = $this->actingAs($user)->get("/admin/team/{$member->id}/edit");
+        $editResponse->assertStatus(200);
+        $editResponse->assertSee('মীর সাব্বির');
+
+        // 5. Update team member
+        $updateResponse = $this->actingAs($user)->put("/admin/team/{$member->id}", [
+            'name' => 'মীর সাব্বির আহমেদ',
+            'slug' => 'mir-sabbir-ahmed',
+            'designation' => 'লিড সফটওয়্যার ইঞ্জিনিয়ার',
+            'bio' => 'আপডেটেড বায়ো বিবরণী।',
+            'order' => 2,
+            'is_active' => 1,
+        ]);
+
+        $updateResponse->assertRedirect('/admin/team');
+        $this->assertDatabaseHas('team_members', [
+            'id' => $member->id,
+            'name' => 'মীর সাব্বির আহমেদ',
+            'slug' => 'mir-sabbir-ahmed',
+            'designation' => 'লিড সফটওয়্যার ইঞ্জিনিয়ার',
+        ]);
+
+        // 6. Delete team member
+        $deleteResponse = $this->actingAs($user)->delete("/admin/team/{$member->id}");
+        $deleteResponse->assertRedirect('/admin/team');
+        $this->assertDatabaseMissing('team_members', [
+            'id' => $member->id,
         ]);
     }
 }
