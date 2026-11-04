@@ -29,6 +29,11 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link font-weight-bold" id="tab-testimonial-link" data-toggle="pill" href="#tab-testimonial" role="tab">
+                                    <i class="fas fa-quote-left mr-1"></i> প্রশংসাপত্র সেকশন
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link font-weight-bold" id="tab-contact-link" data-toggle="pill" href="#tab-contact" role="tab">
                                     <i class="fas fa-address-book mr-1"></i> যোগাযোগ তথ্য
                                 </a>
@@ -262,6 +267,22 @@
                                         @endif
                                         <input type="file" name="about_support_image" id="about_support_image" class="form-control-file" accept="image/*">
                                     </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab: Testimonial Section -->
+                            <div class="tab-pane fade" id="tab-testimonial" role="tabpanel">
+                                <div class="form-group">
+                                    <label for="testimonial_subtitle">প্রশংসাপত্র সাব-শিরোনাম (Subtitle)</label>
+                                    <input type="text" name="testimonial_subtitle" id="testimonial_subtitle" class="form-control" value="{{ old('testimonial_subtitle', $settings['testimonial_subtitle'] ?? 'প্রশংসা সমূহ') }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="testimonial_title">প্রশংসাপত্র মূল শিরোনাম (Main Title)</label>
+                                    <input type="text" name="testimonial_title" id="testimonial_title" class="form-control" value="{{ old('testimonial_title', $settings['testimonial_title'] ?? 'আমাদের ক্লায়েন্টগন কি বলে') }}">
+                                </div>
+                                <div class="callout callout-info mt-4">
+                                    <h5><i class="fas fa-info-circle mr-1"></i> প্রশংসাপত্র আইটেমসমূহ পরিচালনা:</h5>
+                                    <p class="mb-0">নির্দিষ্ট ক্লায়েন্ট রিভিউ, ছবি এবং রেটিং যোগ বা পরিবর্তনের জন্য সাইডবারের <strong>"কনটেন্ট ম্যানেজমেন্ট > প্রশংসাপত্র / রিভিউ"</strong> মেনু ব্যবহার করুন।</p>
                                 </div>
                             </div>
 

@@ -46,6 +46,13 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a href="{{ route('admin.testimonials.index') }}" class="nav-link {{ request()->routeIs('admin.testimonials*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-quote-left"></i>
+                        <p>প্রশংসাপত্র / রিভিউ</p>
+                    </a>
+                </li>
+
                 <li class="nav-header">গ্রাহক ও অনুসন্ধান</li>
 
                 <li class="nav-item">

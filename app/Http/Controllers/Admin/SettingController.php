@@ -72,6 +72,10 @@ class SettingController extends Controller
             'about_small_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:4096'],
             'about_support_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:4096'],
 
+            // Testimonial Settings
+            'testimonial_subtitle' => ['nullable', 'string', 'max:255'],
+            'testimonial_title' => ['nullable', 'string', 'max:255'],
+
             // Footer & SEO
             'footer_about_text' => ['nullable', 'string', 'max:1000'],
             'footer_copyright' => ['nullable', 'string', 'max:255'],

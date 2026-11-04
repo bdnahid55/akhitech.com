@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             ServiceSeeder::class,
             PortfolioSeeder::class,
             PostSeeder::class,
+            TestimonialSeeder::class,
         ]);
     }
 }

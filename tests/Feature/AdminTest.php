@@ -8,6 +8,7 @@ use App\Models\Portfolio;
 use App\Models\Service;
 use App\Models\Setting;
 use App\Models\Subscriber;
+use App\Models\Testimonial;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -255,6 +256,8 @@ class AdminTest extends TestCase
             'contact_phone' => '+8801999999999',
             'contact_email' => 'hello@akhitech.com',
             'footer_copyright' => '© 2026 Akhitech Solutions Ltd. All rights reserved.',
+            'testimonial_subtitle' => 'গ্রাহকদের মতামত',
+            'testimonial_title' => 'আমাদের ক্লায়েন্টরা যা বলছেন',
             'default_meta_title' => 'Akhitech Solutions | শীর্ষ আইটি সেবা',
             'default_meta_description' => 'বিশ্বমানের সফটওয়্যার সমাধান।',
         ]);
@@ -263,7 +266,73 @@ class AdminTest extends TestCase
         $this->assertEquals('Akhitech Solutions Ltd.', Setting::get('site_name'));
         $this->assertEquals('স্মার্ট বিজনেস সল্যুশন ও উদ্ভাবন', Setting::get('banner_title'));
         $this->assertEquals('১০ বছরের সমৃদ্ধ পেশাদার অভিজ্ঞতা', Setting::get('about_title'));
+        $this->assertEquals('গ্রাহকদের মতামত', Setting::get('testimonial_subtitle'));
+        $this->assertEquals('আমাদের ক্লায়েন্টরা যা বলছেন', Setting::get('testimonial_title'));
         $this->assertEquals('+8801999999999', Setting::get('contact_phone'));
         $this->assertEquals('hello@akhitech.com', Setting::get('contact_email'));
+    }
+
+    /**
+     * Admin can view, create, edit, and delete testimonials.
+     */
+    public function test_admin_can_manage_testimonials(): void
+    {
+        $user = User::factory()->create();
+
+        // 1. View testimonials index
+        $indexResponse = $this->actingAs($user)->get('/admin/testimonials');
+        $indexResponse->assertStatus(200);
+
+        // 2. View create form
+        $createResponse = $this->actingAs($user)->get('/admin/testimonials/create');
+        $createResponse->assertStatus(200);
+
+        // 3. Store new testimonial
+        $storeResponse = $this->actingAs($user)->post('/admin/testimonials', [
+            'name' => 'তানভীর রহমান',
+            'designation' => 'ব্যবস্থাপনা পরিচালক',
+            'comment' => 'তাদের সেবা ও কর্মদক্ষতা সত্যিই প্রশংসনীয়। আমাদের কোম্পানির গ্রোথে তারা দারুণ ভূমিকা রেখেছে।',
+            'rating' => 5,
+            'order' => 1,
+            'is_active' => 1,
+        ]);
+
+        $storeResponse->assertRedirect('/admin/testimonials');
+        $this->assertDatabaseHas('testimonials', [
+            'name' => 'তানভীর রহমান',
+            'designation' => 'ব্যবস্থাপনা পরিচালক',
+            'rating' => 5,
+        ]);
+
+        $testimonial = Testimonial::where('name', 'তানভীর রহমান')->firstOrFail();
+
+        // 4. View edit form
+        $editResponse = $this->actingAs($user)->get("/admin/testimonials/{$testimonial->id}/edit");
+        $editResponse->assertStatus(200);
+        $editResponse->assertSee('তানভীর রহমান');
+
+        // 5. Update testimonial
+        $updateResponse = $this->actingAs($user)->put("/admin/testimonials/{$testimonial->id}", [
+            'name' => 'তানভীর আহমেদ',
+            'designation' => 'প্রধান নির্বাহী কর্মকর্তা',
+            'comment' => 'আপডেটেড কমেন্ট: সেরা সফটওয়্যার ডেভেলপমেন্ট টিম!',
+            'rating' => 5,
+            'order' => 2,
+            'is_active' => 1,
+        ]);
+
+        $updateResponse->assertRedirect('/admin/testimonials');
+        $this->assertDatabaseHas('testimonials', [
+            'id' => $testimonial->id,
+            'name' => 'তানভীর আহমেদ',
+            'designation' => 'প্রধান নির্বাহী কর্মকর্তা',
+        ]);
+
+        // 6. Delete testimonial
+        $deleteResponse = $this->actingAs($user)->delete("/admin/testimonials/{$testimonial->id}");
+        $deleteResponse->assertRedirect('/admin/testimonials');
+        $this->assertDatabaseMissing('testimonials', [
+            'id' => $testimonial->id,
+        ]);
     }
 }

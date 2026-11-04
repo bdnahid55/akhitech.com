@@ -215,54 +215,43 @@
             <div class="row">
                 <div class="col-xl-8 m-auto">
                     <div class="section_heading text-center">
-                        <h3>প্রশংসা সমূহ</h3>
-                        <h2>আমাদের সম্মানিত ক্লায়েন্টগণ কি বলছেন</h2>
+                        <h3>{{ $siteSettings['testimonial_subtitle'] ?? 'প্রশংসা সমূহ' }}</h3>
+                        <h2>{{ $siteSettings['testimonial_title'] ?? 'আমাদের ক্লায়েন্টগন কি বলে' }}</h2>
                     </div>
                 </div>
             </div>
             <div class="row home_2_team_slider">
-                <div class="col-lg-4 wow fadeInUp" data-wow-duration="1s">
-                    <div class="home_2_single_team">
-                        <span>
-                            <img src="{{ asset('assets/front/img/17362348801814731466.png') }}" alt="client" class="img-fluid w-100">
-                        </span>
-                        <p>আমরা আমাদের নতুন ওয়েবসাইটের সমস্ত দিক নিয়ে খুবই সন্তুষ্ট। সময়মতো ডেলিভারি ও চমৎকার সাপোর্ট পেয়েছি।</p>
-                        <div class="item_bottom">
-                            <div class="text">
-                                <h4>ফাতেমা আক্তার</h4>
-                                <p>উদ্যোক্তা</p>
+                @forelse($testimonials as $testimonial)
+                    <div class="col-lg-4 wow fadeInUp" data-wow-duration="1s">
+                        <div class="home_2_single_team">
+                            <span>
+                                <img src="{{ $testimonial->image ? asset($testimonial->image) : asset('assets/front/img/17362348801814731466.png') }}" alt="{{ $testimonial->name }}" class="img-fluid w-100">
+                            </span>
+                            <p>{{ $testimonial->comment }}</p>
+                            <div class="item_bottom">
+                                <div class="text">
+                                    <h4>{{ $testimonial->name }}</h4>
+                                    @if($testimonial->designation)
+                                        <p>{{ $testimonial->designation }}</p>
+                                    @endif
+                                </div>
+                                <ul class="d-flex text-warning">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        @if($i <= ($testimonial->rating ?? 5))
+                                            <li><i class="fas fa-star"></i></li>
+                                        @else
+                                            <li><i class="far fa-star"></i></li>
+                                        @endif
+                                    @endfor
+                                </ul>
                             </div>
-                            <ul class="d-flex text-warning">
-                                <li><i class="fas fa-star"></i></li>
-                                <li><i class="fas fa-star"></i></li>
-                                <li><i class="fas fa-star"></i></li>
-                                <li><i class="fas fa-star"></i></li>
-                                <li><i class="fas fa-star"></i></li>
-                            </ul>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-4 wow fadeInUp" data-wow-duration="1s">
-                    <div class="home_2_single_team">
-                        <span>
-                            <img src="{{ asset('assets/front/img/17362347301097715037.png') }}" alt="client" class="img-fluid w-100">
-                        </span>
-                        <p>কাজের মান ও প্রফেশনালিজম অসাধারণ। সফটওয়্যার ডেভেলপমেন্ট এর জন্য তারা বিশ্বস্ত একটি টিম।</p>
-                        <div class="item_bottom">
-                            <div class="text">
-                                <h4>খালেদ মাহমুদ</h4>
-                                <p>ম্যানেজার</p>
-                            </div>
-                            <ul class="d-flex text-warning">
-                                <li><i class="fas fa-star"></i></li>
-                                <li><i class="fas fa-star"></i></li>
-                                <li><i class="fas fa-star"></i></li>
-                                <li><i class="fas fa-star"></i></li>
-                                <li><i class="fas fa-star"></i></li>
-                            </ul>
-                        </div>
+                @empty
+                    <div class="col-12 text-center py-4">
+                        <p class="text-muted">কোনো প্রশংসাপত্র পাওয়া যায়নি।</p>
                     </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </section>

@@ -10,6 +10,7 @@ use App\Models\Portfolio;
 use App\Models\Post;
 use App\Models\Service;
 use App\Models\Subscriber;
+use App\Models\Testimonial;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -25,8 +26,9 @@ class PageController extends Controller
         $services = Service::where('is_active', true)->orderBy('order')->take(4)->get();
         $portfolios = Portfolio::where('is_active', true)->take(6)->get();
         $posts = Post::where('is_published', true)->latest('published_at')->take(3)->get();
+        $testimonials = Testimonial::where('is_active', true)->orderBy('order')->latest()->get();
 
-        return view('pages.home', compact('services', 'portfolios', 'posts'));
+        return view('pages.home', compact('services', 'portfolios', 'posts', 'testimonials'));
     }
 
     /**

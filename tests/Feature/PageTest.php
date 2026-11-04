@@ -6,6 +6,7 @@ use App\Models\Page;
 use App\Models\Portfolio;
 use App\Models\Post;
 use App\Models\Service;
+use App\Models\Testimonial;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -255,5 +256,32 @@ class PageTest extends TestCase
         $this->assertDatabaseHas('subscribers', [
             'email' => 'subscriber@example.com',
         ]);
+    }
+
+    /**
+     * Test homepage renders dynamic testimonials correctly.
+     */
+    public function test_homepage_renders_dynamic_testimonials(): void
+    {
+        Testimonial::factory()->create([
+            'name' => 'ফাতেমা আক্তার',
+            'designation' => 'উদ্যোক্তা',
+            'comment' => 'আমরা আমাদের নতুন ওয়েবসাইটের সমস্ত দিক নিয়ে খুব মুগ্ধ হয়েছি।',
+            'rating' => 5,
+            'is_active' => true,
+        ]);
+
+        Testimonial::factory()->create([
+            'name' => 'লুকানো ব্যক্তি',
+            'is_active' => false,
+        ]);
+
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+        $response->assertSee('ফাতেমা আক্তার');
+        $response->assertSee('উদ্যোক্তা');
+        $response->assertSee('আমরা আমাদের নতুন ওয়েবসাইটের সমস্ত দিক নিয়ে খুব মুগ্ধ হয়েছি।');
+        $response->assertDontSee('লুকানো ব্যক্তি');
     }
 }

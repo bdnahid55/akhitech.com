@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 use App\Http\Controllers\Admin\SubscriberController as AdminSubscriberController;
+use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 
@@ -68,6 +69,9 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     // Blog Posts CRUD
     Route::resource('posts', AdminPostController::class);
+
+    // Testimonials CRUD
+    Route::resource('testimonials', AdminTestimonialController::class);
 
     // Inquiries & Messages
     Route::get('inquiries', [AdminInquiryController::class, 'index'])->name('inquiries.index');
