@@ -104,6 +104,46 @@
             object-fit: cover !important;
             display: block !important;
         }
+
+        @media (max-width: 575.99px) {
+            .project_item {
+                height: 280px !important;
+                margin-top: 20px !important;
+            }
+            .project_item img,
+            .project_item > a > img {
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: cover !important;
+                display: block !important;
+            }
+            .project_item_text {
+                height: auto !important;
+                max-height: 85% !important;
+                padding: 15px !important;
+                opacity: 1 !important;
+                background: linear-gradient(0deg, rgba(9, 9, 25, 0.95) 0%, rgba(9, 9, 25, 0.75) 70%, transparent 100%) !important;
+                flex-wrap: nowrap !important;
+            }
+            .project_item_text span {
+                font-size: 12px !important;
+                padding: 5px 14px !important;
+                margin-bottom: 6px !important;
+            }
+            .project_item_text h3 {
+                font-size: 16px !important;
+                line-height: 1.3 !important;
+                margin-top: 5px !important;
+                margin-bottom: 8px !important;
+                display: -webkit-box !important;
+                -webkit-line-clamp: 2 !important;
+                -webkit-box-orient: vertical !important;
+                overflow: hidden !important;
+            }
+            .project_item_text a {
+                font-size: 13px !important;
+            }
+        }
     </style>
 
     @stack('styles')

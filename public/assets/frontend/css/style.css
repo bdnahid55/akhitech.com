@@ -1457,6 +1457,19 @@ header {
   margin-top: 25px;
 }
 
+.project_item > a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.project_item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 .project_item_text {
   background: #09091997;
   position: absolute;
@@ -1466,7 +1479,7 @@ header {
   left: 0;
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: end;
   padding: 20px;
   align-items: start;

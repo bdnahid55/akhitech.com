@@ -221,9 +221,9 @@
                     </div>
                 </div>
             </div>
-            <div class="row grid">
+            <div class="row">
                 @forelse ($portfolios as $portfolio)
-                    <div class="col-xl-4 col-sm-6 col-lg-4 wow fadeInUp" data-wow-duration="1s">
+                    <div class="col-xl-4 col-sm-6 col-lg-4 col-12 wow fadeInUp" data-wow-duration="1s">
                         <div class="project_item">
                             <a href="{{ route('portfolio.show', $portfolio->slug) }}">
                                 <img src="{{ $portfolio->image ? asset($portfolio->image) : asset('assets/front/img/portfolio/1736978150325788965.png') }}" alt="{{ $portfolio->title }}" class="img-fluid w-100">
