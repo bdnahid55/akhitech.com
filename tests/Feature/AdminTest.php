@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Achievement;
 use App\Models\Inquiry;
 use App\Models\Page;
 use App\Models\Portfolio;
@@ -261,6 +262,8 @@ class AdminTest extends TestCase
             'testimonial_title' => 'আমাদের ক্লায়েন্টরা যা বলছেন',
             'team_subtitle' => 'আমাদের স্পেশালিস্ট টিম',
             'team_title' => 'দক্ষ ও অভিজ্ঞ টিম মেম্বারবৃন্দ',
+            'achievement_subtitle' => 'আমাদের সাফল্যসমূহ',
+            'achievement_title' => 'আমাদের গৌরবোজ্জ্বল অর্জন সমূহ',
             'default_meta_title' => 'Akhitech Solutions | শীর্ষ আইটি সেবা',
             'default_meta_description' => 'বিশ্বমানের সফটওয়্যার সমাধান।',
         ]);
@@ -273,6 +276,8 @@ class AdminTest extends TestCase
         $this->assertEquals('আমাদের ক্লায়েন্টরা যা বলছেন', Setting::get('testimonial_title'));
         $this->assertEquals('আমাদের স্পেশালিস্ট টিম', Setting::get('team_subtitle'));
         $this->assertEquals('দক্ষ ও অভিজ্ঞ টিম মেম্বারবৃন্দ', Setting::get('team_title'));
+        $this->assertEquals('আমাদের সাফল্যসমূহ', Setting::get('achievement_subtitle'));
+        $this->assertEquals('আমাদের গৌরবোজ্জ্বল অর্জন সমূহ', Setting::get('achievement_title'));
         $this->assertEquals('+8801999999999', Setting::get('contact_phone'));
         $this->assertEquals('hello@akhitech.com', Setting::get('contact_email'));
     }
@@ -405,6 +410,71 @@ class AdminTest extends TestCase
         $deleteResponse->assertRedirect('/admin/team');
         $this->assertDatabaseMissing('team_members', [
             'id' => $member->id,
+        ]);
+    }
+
+    /**
+     * Admin can view, create, edit, and delete achievements.
+     */
+    public function test_admin_can_manage_achievements(): void
+    {
+        $user = User::factory()->create();
+
+        // 1. View achievements index
+        $indexResponse = $this->actingAs($user)->get('/admin/achievements');
+        $indexResponse->assertStatus(200);
+
+        // 2. View create form
+        $createResponse = $this->actingAs($user)->get('/admin/achievements/create');
+        $createResponse->assertStatus(200);
+
+        // 3. Store new achievement
+        $storeResponse = $this->actingAs($user)->post('/admin/achievements', [
+            'title' => 'আন্তর্জাতিক ক্লায়েন্ট',
+            'count' => '120',
+            'suffix' => '+',
+            'icon' => 'fas fa-globe',
+            'order' => 1,
+            'is_active' => 1,
+        ]);
+
+        $storeResponse->assertRedirect('/admin/achievements');
+        $this->assertDatabaseHas('achievements', [
+            'title' => 'আন্তর্জাতিক ক্লায়েন্ট',
+            'count' => '120',
+            'icon' => 'fas fa-globe',
+        ]);
+
+        $achievement = Achievement::where('title', 'আন্তর্জাতিক ক্লায়েন্ট')->firstOrFail();
+
+        // 4. View edit form
+        $editResponse = $this->actingAs($user)->get("/admin/achievements/{$achievement->id}/edit");
+        $editResponse->assertStatus(200);
+        $editResponse->assertSee('আন্তর্জাতিক ক্লায়েন্ট');
+
+        // 5. Update achievement
+        $updateResponse = $this->actingAs($user)->put("/admin/achievements/{$achievement->id}", [
+            'title' => 'গ্লোবাল পার্টনার',
+            'count' => '150',
+            'suffix' => '+',
+            'icon' => 'fas fa-handshake',
+            'order' => 2,
+            'is_active' => 1,
+        ]);
+
+        $updateResponse->assertRedirect('/admin/achievements');
+        $this->assertDatabaseHas('achievements', [
+            'id' => $achievement->id,
+            'title' => 'গ্লোবাল পার্টনার',
+            'count' => '150',
+            'icon' => 'fas fa-handshake',
+        ]);
+
+        // 6. Delete achievement
+        $deleteResponse = $this->actingAs($user)->delete("/admin/achievements/{$achievement->id}");
+        $deleteResponse->assertRedirect('/admin/achievements');
+        $this->assertDatabaseMissing('achievements', [
+            'id' => $achievement->id,
         ]);
     }
 }

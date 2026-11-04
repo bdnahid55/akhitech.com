@@ -80,6 +80,10 @@ class SettingController extends Controller
             'team_subtitle' => ['nullable', 'string', 'max:255'],
             'team_title' => ['nullable', 'string', 'max:255'],
 
+            // Achievement Settings
+            'achievement_subtitle' => ['nullable', 'string', 'max:255'],
+            'achievement_title' => ['nullable', 'string', 'max:255'],
+
             // Footer & SEO
             'footer_about_text' => ['nullable', 'string', 'max:1000'],
             'footer_copyright' => ['nullable', 'string', 'max:255'],

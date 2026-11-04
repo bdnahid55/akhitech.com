@@ -39,6 +39,11 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link font-weight-bold" id="tab-achievement-link" data-toggle="pill" href="#tab-achievement" role="tab">
+                                    <i class="fas fa-trophy mr-1"></i> অর্জন সেকশন
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link font-weight-bold" id="tab-contact-link" data-toggle="pill" href="#tab-contact" role="tab">
                                     <i class="fas fa-address-book mr-1"></i> যোগাযোগ তথ্য
                                 </a>
@@ -304,6 +309,22 @@
                                 <div class="callout callout-info mt-4">
                                     <h5><i class="fas fa-info-circle mr-1"></i> টিম মেম্বারদের পরিচালনা:</h5>
                                     <p class="mb-0">নতুন সদস্য যোগ করা, ছবি, পদবী, সোশ্যাল লিংক বা বায়ো পরিবর্তনের জন্য সাইডবারের <strong>"কনটেন্ট ম্যানেজমেন্ট > টিম মেম্বারস"</strong> মেনু ব্যবহার করুন।</p>
+                                </div>
+                            </div>
+
+                            <!-- Tab: Achievement Section -->
+                            <div class="tab-pane fade" id="tab-achievement" role="tabpanel">
+                                <div class="form-group">
+                                    <label for="achievement_subtitle">অর্জন সেকশন সাব-শিরোনাম (Subtitle)</label>
+                                    <input type="text" name="achievement_subtitle" id="achievement_subtitle" class="form-control" value="{{ old('achievement_subtitle', $settings['achievement_subtitle'] ?? 'অর্জন সমূহ') }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="achievement_title">অর্জন সেকশন মূল শিরোনাম (Main Title)</label>
+                                    <input type="text" name="achievement_title" id="achievement_title" class="form-control" value="{{ old('achievement_title', $settings['achievement_title'] ?? 'আমাদের অর্জন সমূহ') }}">
+                                </div>
+                                <div class="callout callout-info mt-4">
+                                    <h5><i class="fas fa-info-circle mr-1"></i> অর্জন / কাউন্টার পরিচালনা:</h5>
+                                    <p class="mb-0">নির্দিষ্ট অর্জন বা কাউন্টার কার্ড (সংখ্যা, আইকন, টাইটেল) যোগ ও পরিবর্তন করতে সাইডবারের <strong>"কনটেন্ট ম্যানেজমেন্ট > অর্জন ও কাউন্টার"</strong> মেনু ব্যবহার করুন।</p>
                                 </div>
                             </div>
 

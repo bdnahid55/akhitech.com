@@ -88,43 +88,40 @@
     ===============================-->
 
     <!--==============================
-        ACHIEVEMENTS START
+        ACHIEVEMENTS START (DYNAMIC)
     ===============================-->
     <section class="achievements pt_115 xs_mt_75 pb_115 bg-light">
         <div class="container">
             <div class="row">
                 <div class="col-xl-8 m-auto">
                     <div class="section_heading text-center">
-                        <h3>আমাদের সাফল্য</h3>
-                        <h2>আমাদের অর্জন সমূহ</h2>
+                        <h3>{{ $siteSettings['achievement_subtitle'] ?? 'আমাদের সাফল্য' }}</h3>
+                        <h2>{{ $siteSettings['achievement_title'] ?? 'আমাদের অর্জন সমূহ' }}</h2>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-duration="1s">
-                    <div class="achievement_item">
-                        <h4><span class="counter">৫৬৮</span>+</h4>
-                        <p>কমপ্লিট প্রজেক্ট</p>
+                @forelse ($achievements as $achievement)
+                    <div class="col-lg-3 col-sm-6 wow fadeInUp mb-4 mb-lg-0" data-wow-duration="1s">
+                        <div class="achievement_item">
+                            <div class="icon">
+                                @if ($achievement->image)
+                                    <span><img src="{{ asset($achievement->image) }}" alt="{{ $achievement->title }}" class="img-fluid" style="max-height: 40px;"></span>
+                                @elseif ($achievement->icon)
+                                    <i class="{{ $achievement->icon }} fa-2x text-white"></i>
+                                @else
+                                    <i class="fas fa-trophy fa-2x text-white"></i>
+                                @endif
+                            </div>
+                            <h4><span class="counter">{{ $achievement->count }}</span>{{ $achievement->suffix ?? '+' }}</h4>
+                            <p>{{ $achievement->title }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-duration="1s">
-                    <div class="achievement_item">
-                        <h4><span class="counter">৪৫৬</span>+</h4>
-                        <p>সন্তুষ্ট ক্লায়েন্ট</p>
+                @empty
+                    <div class="col-12 text-center py-4">
+                        <p class="text-muted">কোনো অর্জনের তথ্য পাওয়া যায়নি।</p>
                     </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-duration="1s">
-                    <div class="achievement_item">
-                        <h4><span class="counter">২৫৬</span>+</h4>
-                        <p>গ্রোইং বিজনেস</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-duration="1s">
-                    <div class="achievement_item">
-                        <h4><span class="counter">২৪</span>/৭</h4>
-                        <p>সাপোর্ট টিম</p>
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </section>

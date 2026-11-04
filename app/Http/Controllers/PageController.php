@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Models\Achievement;
 use App\Models\Inquiry;
 use App\Models\Page;
 use App\Models\Portfolio;
@@ -20,7 +21,7 @@ use Illuminate\View\View;
 class PageController extends Controller
 {
     /**
-     * Display the home page with dynamic services, portfolios, blogs, testimonials, and team.
+     * Display the home page with dynamic services, portfolios, blogs, testimonials, team, and achievements.
      */
     public function home(): View
     {
@@ -29,18 +30,20 @@ class PageController extends Controller
         $posts = Post::where('is_published', true)->latest('published_at')->take(3)->get();
         $testimonials = Testimonial::where('is_active', true)->orderBy('order')->latest()->get();
         $teamMembers = TeamMember::where('is_active', true)->orderBy('order')->get();
+        $achievements = Achievement::where('is_active', true)->orderBy('order')->get();
 
-        return view('pages.home', compact('services', 'portfolios', 'posts', 'testimonials', 'teamMembers'));
+        return view('pages.home', compact('services', 'portfolios', 'posts', 'testimonials', 'teamMembers', 'achievements'));
     }
 
     /**
-     * Display the about page with company details and team members.
+     * Display the about page with company details, achievements, and team members.
      */
     public function about(): View
     {
         $teamMembers = TeamMember::where('is_active', true)->orderBy('order')->get();
+        $achievements = Achievement::where('is_active', true)->orderBy('order')->get();
 
-        return view('pages.about', compact('teamMembers'));
+        return view('pages.about', compact('teamMembers', 'achievements'));
     }
 
     /**

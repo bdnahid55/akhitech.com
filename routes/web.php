@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Admin\AchievementController as AdminAchievementController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\InquiryController as AdminInquiryController;
@@ -77,6 +78,9 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     // Team Members CRUD
     Route::resource('team', AdminTeamMemberController::class);
+
+    // Achievements CRUD
+    Route::resource('achievements', AdminAchievementController::class);
 
     // Inquiries & Messages
     Route::get('inquiries', [AdminInquiryController::class, 'index'])->name('inquiries.index');

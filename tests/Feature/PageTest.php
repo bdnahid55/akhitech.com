@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Achievement;
 use App\Models\Page;
 use App\Models\Portfolio;
 use App\Models\Post;
@@ -24,6 +25,7 @@ class PageTest extends TestCase
         Portfolio::factory()->count(3)->create(['is_active' => true]);
         Post::factory()->count(3)->create(['is_published' => true]);
         TeamMember::factory()->count(2)->create(['is_active' => true]);
+        Achievement::factory()->count(2)->create(['is_active' => true]);
 
         $routes = [
             '/',
@@ -317,5 +319,37 @@ class PageTest extends TestCase
         $aboutResponse->assertSee('Md Nazrul Islam (Sayed)');
         $aboutResponse->assertSee('CEO');
         $aboutResponse->assertDontSee('লুকানো টিম মেম্বার');
+    }
+
+    /**
+     * Test homepage and about page render dynamic achievements correctly.
+     */
+    public function test_homepage_and_about_render_dynamic_achievements(): void
+    {
+        Achievement::factory()->create([
+            'title' => 'কমপ্লিট প্রজেক্ট রেকর্ড',
+            'count' => '568',
+            'suffix' => '+',
+            'is_active' => true,
+        ]);
+
+        Achievement::factory()->create([
+            'title' => 'লুকানো অর্জন',
+            'is_active' => false,
+        ]);
+
+        // 1. Homepage
+        $homeResponse = $this->get('/');
+        $homeResponse->assertStatus(200);
+        $homeResponse->assertSee('কমপ্লিট প্রজেক্ট রেকর্ড');
+        $homeResponse->assertSee('568');
+        $homeResponse->assertDontSee('লুকানো অর্জন');
+
+        // 2. About page
+        $aboutResponse = $this->get('/about');
+        $aboutResponse->assertStatus(200);
+        $aboutResponse->assertSee('কমপ্লিট প্রজেক্ট রেকর্ড');
+        $aboutResponse->assertSee('568');
+        $aboutResponse->assertDontSee('লুকানো অর্জন');
     }
 }

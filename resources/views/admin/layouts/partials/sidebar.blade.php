@@ -60,6 +60,13 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a href="{{ route('admin.achievements.index') }}" class="nav-link {{ request()->routeIs('admin.achievements*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-trophy"></i>
+                        <p>অর্জন ও কাউন্টার</p>
+                    </a>
+                </li>
+
                 <li class="nav-header">গ্রাহক ও অনুসন্ধান</li>
 
                 <li class="nav-item">
