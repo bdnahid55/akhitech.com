@@ -1,6 +1,6 @@
 # Akhitech.com - Enterprise Agency & IT Solutions Platform
 
-A modern, high-performance, and secure enterprise Agency & IT Solutions web platform built with **Laravel 12** and **PHP 8.4**. Featuring a dynamic customer-facing website, a comprehensive Admin Panel (CMS), hardened security layers, automated SEO sitemap generation, and role-based access control.
+A modern, high-performance, and secure enterprise Agency & IT Solutions web platform built with **Laravel 13.17** and **PHP 8.4**. Featuring a dynamic customer-facing website, a comprehensive Admin Panel (CMS), hardened security layers, automated SEO sitemap generation, and role-based access control.
 
 ---
 
@@ -80,7 +80,7 @@ Ensure your server or hosting environment meets the following specifications:
 
 ### 1. Clone or Extract the Repository
 ```bash
-git clone https://github.com/your-username/akhitech.com.git
+git clone https://github.com/bdnahid55/akhitech.com.git
 cd akhitech.com
 ```
 
