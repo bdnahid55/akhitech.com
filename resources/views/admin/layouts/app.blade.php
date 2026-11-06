@@ -141,6 +141,27 @@
             "autoWidth": false,
             "pageLength": 10,
         });
+
+        // Client-side automatic logout after inactivity
+        (function() {
+            const timeoutMinutes = {{ (int) round(((int) config('auth.admin_idle_timeout', 3600)) / 60) }};
+            const timeoutMs = timeoutMinutes * 60 * 1000;
+            let idleTimer;
+
+            function resetIdleTimer() {
+                clearTimeout(idleTimer);
+                idleTimer = setTimeout(function() {
+                    alert('অলসতার কারণে (' + timeoutMinutes + ' মিনিট কোনো কার্যক্রম না থাকায়) আপনার সেশনটি স্বয়ংক্রিয়ভাবে বন্ধ করা হয়েছে।');
+                    window.location.href = "{{ route('admin.login') }}";
+                }, timeoutMs);
+            }
+
+            ['mousemove', 'mousedown', 'keypress', 'scroll', 'touchstart'].forEach(function(evt) {
+                document.addEventListener(evt, resetIdleTimer, false);
+            });
+
+            resetIdleTimer();
+        })();
     });
 </script>
 

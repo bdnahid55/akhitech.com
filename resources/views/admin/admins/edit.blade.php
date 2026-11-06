@@ -99,6 +99,20 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="form-group bg-light p-3 border rounded">
+                    <label for="current_password">
+                        <i class="fas fa-user-lock text-warning mr-1"></i> আপনার বর্তমান পাসওয়ার্ড (Re-authentication)
+                    </label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-key"></i></span>
+                        </div>
+                        <input type="password" name="current_password" id="current_password" class="form-control @error('current_password') is-invalid @enderror" placeholder="নতুন পাসওয়ার্ড সেট করতে আপনার বর্তমান পাসওয়ার্ড লিখুন">
+                        @error('current_password') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+                    <small class="form-text text-muted">নিরাপত্তার স্বার্থে পাসওয়ার্ড পরিবর্তন করতে আপনার বর্তমান পাসওয়ার্ড দিয়ে নিশ্চিত করতে হবে।</small>
+                </div>
             </div>
             <div class="card-footer bg-light">
                 <button type="submit" class="btn btn-primary">

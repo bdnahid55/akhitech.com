@@ -97,13 +97,13 @@ class AdminUserController extends Controller
     }
 
     /**
-     * Update the specified admin account with strong password enforcement.
+     * Update the specified admin account with strong password enforcement and re-authentication.
      */
     public function update(Request $request, User $admin): RedirectResponse
     {
         Gate::authorize('admins.edit');
 
-        $validated = $request->validate([
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$admin->id],
             'password' => [
@@ -118,8 +118,18 @@ class AdminUserController extends Controller
             ],
             'roles' => ['nullable', 'array'],
             'roles.*' => ['string', 'exists:roles,name'],
-        ], [
+        ];
+
+        // Re-authentication requirement:
+        // When setting or changing a password, the current authenticated user must re-authenticate with their current password.
+        if ($request->filled('password')) {
+            $rules['current_password'] = ['required', 'current_password'];
+        }
+
+        $validated = $request->validate($rules, [
             'password.confirmed' => 'পাসওয়ার্ড নিশ্চিতকরণ মিলছে না।',
+            'current_password.required' => 'পাসওয়ার্ড পরিবর্তন করতে আপনার বর্তমান পাসওয়ার্ড প্রদান করা আবশ্যক।',
+            'current_password.current_password' => 'প্রদত্ত বর্তমান পাসওয়ার্ডটি সঠিক নয়।',
         ]);
 
         $data = [

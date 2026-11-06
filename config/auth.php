@@ -114,4 +114,16 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Inactivity Logout Timeout (Seconds)
+    |--------------------------------------------------------------------------
+    |
+    | Number of seconds of idle time after which an authenticated admin will
+    | be automatically logged out. Default is 900 seconds (15 minutes).
+    |
+    */
+
+    'admin_idle_timeout' => (int) env('ADMIN_IDLE_TIMEOUT', 3600),
+
 ];

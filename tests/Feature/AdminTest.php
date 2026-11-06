@@ -902,4 +902,73 @@ class AdminTest extends TestCase
         $strongResponse->assertRedirect('/admin/admins');
         $this->assertDatabaseHas('users', ['email' => 'strong@example.com']);
     }
+
+    /**
+     * Test re-authentication requirement before changing password.
+     */
+    public function test_reauthentication_required_before_changing_password(): void
+    {
+        $superAdmin = $this->createSuperAdmin([
+            'email' => 'authcheck@example.com',
+            'password' => bcrypt('MyCurrent#Pass123'),
+        ]);
+
+        $targetUser = User::factory()->create();
+
+        // 1. Trying to change password with incorrect current_password fails
+        $failResponse = $this->actingAs($superAdmin)->put("/admin/admins/{$targetUser->id}", [
+            'name' => $targetUser->name,
+            'email' => $targetUser->email,
+            'password' => 'NewStrong#Pass999',
+            'password_confirmation' => 'NewStrong#Pass999',
+            'current_password' => 'WrongCurrentPassword',
+        ]);
+
+        $failResponse->assertSessionHasErrors('current_password');
+
+        // 2. Trying to change password without current_password fails
+        $missingResponse = $this->actingAs($superAdmin)->put("/admin/admins/{$targetUser->id}", [
+            'name' => $targetUser->name,
+            'email' => $targetUser->email,
+            'password' => 'NewStrong#Pass999',
+            'password_confirmation' => 'NewStrong#Pass999',
+        ]);
+
+        $missingResponse->assertSessionHasErrors('current_password');
+
+        // 3. Changing password with correct current_password succeeds
+        $successResponse = $this->actingAs($superAdmin)->put("/admin/admins/{$targetUser->id}", [
+            'name' => $targetUser->name,
+            'email' => $targetUser->email,
+            'password' => 'NewStrong#Pass999',
+            'password_confirmation' => 'NewStrong#Pass999',
+            'current_password' => 'MyCurrent#Pass123',
+        ]);
+
+        $successResponse->assertRedirect('/admin/admins');
+        $successResponse->assertSessionHas('success');
+    }
+
+    /**
+     * Test automatic admin logout after inactivity timeout.
+     */
+    public function test_automatic_admin_logout_after_inactivity(): void
+    {
+        $superAdmin = $this->createSuperAdmin();
+
+        // Active request sets last activity
+        $activeResponse = $this->actingAs($superAdmin)->get('/admin');
+        $activeResponse->assertStatus(200);
+        $this->assertTrue(session()->has('admin_last_activity_time'));
+
+        // Simulate session inactivity beyond timeout (1000 seconds ago)
+        $timeoutResponse = $this->actingAs($superAdmin)
+            ->withSession(['admin_last_activity_time' => time() - 1000])
+            ->get('/admin');
+
+        // Should be logged out and redirected to login page with error
+        $timeoutResponse->assertRedirect('/secure-portal');
+        $timeoutResponse->assertSessionHas('error');
+        $this->assertGuest();
+    }
 }
