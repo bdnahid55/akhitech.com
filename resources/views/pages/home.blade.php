@@ -146,7 +146,7 @@
             </div>
             <div class="row">
                 @forelse ($services as $service)
-                    <div class="col-xl-3 col-md-6 col-lg-4 wow fadeInUp" data-wow-duration="1s">
+                    <div class="col-xl-3 col-md-6 col-lg-4 col-12 wow fadeInUp" data-wow-duration="1s">
                         <div class="service_item">
                             <span class="icon"><i class="{{ $service->icon ?: 'fas fa-laptop-code' }}"></i></span>
                             <h2>{{ $service->title }}</h2>

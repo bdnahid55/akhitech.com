@@ -105,6 +105,41 @@
             display: block !important;
         }
 
+        /* Service Item Equal Height */
+        .services .row > [class*='col-'],
+        .services_page .row > [class*='col-'] {
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        .service_item {
+            height: calc(100% - 25px) !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        .service_item h2 {
+            min-height: 58px !important;
+            display: -webkit-box !important;
+            -webkit-line-clamp: 2 !important;
+            -webkit-box-orient: vertical !important;
+            overflow: hidden !important;
+            line-height: 1.25 !important;
+            margin-top: 25px !important;
+            margin-bottom: 15px !important;
+        }
+
+        .service_item p {
+            min-height: 78px !important;
+            display: -webkit-box !important;
+            -webkit-line-clamp: 3 !important;
+            -webkit-box-orient: vertical !important;
+            overflow: hidden !important;
+            line-height: 26px !important;
+            margin-bottom: 20px !important;
+            flex-grow: 1 !important;
+        }
+
         @media (max-width: 575.99px) {
             .project_item {
                 height: 280px !important;
