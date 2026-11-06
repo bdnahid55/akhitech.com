@@ -31,7 +31,7 @@ class SecurityHeadersTest extends TestCase
      */
     public function test_security_headers_are_present_on_admin_login(): void
     {
-        $response = $this->get('/admin/login');
+        $response = $this->get('/secure-portal');
 
         $response->assertStatus(200);
         $response->assertHeader('X-Frame-Options', 'SAMEORIGIN');

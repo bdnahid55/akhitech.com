@@ -43,25 +43,34 @@ class AdminTest extends TestCase
     }
 
     /**
-     * Unauthenticated users cannot access admin dashboard.
+     * Unauthenticated users cannot access admin dashboard and are redirected to secure portal.
      */
     public function test_unauthenticated_user_cannot_access_admin_dashboard(): void
     {
         $response = $this->get('/admin');
-        $response->assertRedirect('/admin/login');
+        $response->assertRedirect('/secure-portal');
     }
 
     /**
-     * Admin can view the login page.
+     * Admin can view the custom secure portal login page.
      */
     public function test_admin_login_page_is_accessible(): void
     {
-        $response = $this->get('/admin/login');
+        $response = $this->get('/secure-portal');
         $response->assertStatus(200);
     }
 
     /**
-     * Admin can authenticate with valid credentials.
+     * Old admin login URL returns 404.
+     */
+    public function test_old_admin_login_url_returns_404(): void
+    {
+        $response = $this->get('/admin/login');
+        $response->assertStatus(404);
+    }
+
+    /**
+     * Admin can authenticate with valid credentials at secure portal.
      */
     public function test_admin_can_log_in_and_redirect_to_dashboard(): void
     {
@@ -70,7 +79,7 @@ class AdminTest extends TestCase
             'password' => bcrypt('password123'),
         ]);
 
-        $response = $this->post('/admin/login', [
+        $response = $this->post('/secure-portal', [
             'email' => 'admin@akhitech.com',
             'password' => 'password123',
         ]);
@@ -781,21 +790,21 @@ class AdminTest extends TestCase
 
         // 5 consecutive failed login attempts
         for ($i = 0; $i < 5; $i++) {
-            $response = $this->from('/admin/login')->post('/admin/login', [
+            $response = $this->from('/secure-portal')->post('/secure-portal', [
                 'email' => 'victim@akhitech.com',
                 'password' => 'wrongpassword',
             ]);
-            $response->assertRedirect('/admin/login');
+            $response->assertRedirect('/secure-portal');
             $response->assertSessionHas('error');
         }
 
         // 6th attempt should be blocked by RateLimiter
-        $blockedResponse = $this->from('/admin/login')->post('/admin/login', [
+        $blockedResponse = $this->from('/secure-portal')->post('/secure-portal', [
             'email' => 'victim@akhitech.com',
             'password' => 'wrongpassword',
         ]);
 
-        $blockedResponse->assertRedirect('/admin/login');
+        $blockedResponse->assertRedirect('/secure-portal');
         $this->assertDatabaseHas('login_activities', [
             'email' => 'victim@akhitech.com',
             'status' => 'locked',
@@ -813,7 +822,7 @@ class AdminTest extends TestCase
         ]);
 
         // Failed attempt
-        $this->post('/admin/login', [
+        $this->post('/secure-portal', [
             'email' => 'logger@akhitech.com',
             'password' => 'wrongpass',
         ]);
@@ -824,7 +833,7 @@ class AdminTest extends TestCase
         ]);
 
         // Successful attempt
-        $this->post('/admin/login', [
+        $this->post('/secure-portal', [
             'email' => 'logger@akhitech.com',
             'password' => 'Strong@Secret123',
         ]);

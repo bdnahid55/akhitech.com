@@ -49,14 +49,14 @@ Route::post('/newsletter/subscribe', [PageController::class, 'newsletterStore'])
 
 /*
 |--------------------------------------------------------------------------
-| Admin Authentication Routes
+| Admin Authentication Routes (Custom Secure Portal)
 |--------------------------------------------------------------------------
 */
 
-Route::get('/login', fn () => redirect()->route('admin.login'))->name('login');
-Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
-Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
+Route::get('/secure-portal', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/secure-portal', [AdminAuthController::class, 'login'])->name('admin.login.submit');
 Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+Route::get('/login', fn () => redirect()->route('admin.login'))->name('login');
 
 /*
 |--------------------------------------------------------------------------
