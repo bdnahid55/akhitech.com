@@ -25,6 +25,9 @@
     @if (!empty($siteSettings['google_search_console_code']))
         <meta name="google-site-verification" content="{{ $siteSettings['google_search_console_code'] }}" />
     @endif
+    @if (!empty($siteSettings['bing_webmaster_code']))
+        <meta name="msvalidate.01" content="{{ $siteSettings['bing_webmaster_code'] }}" />
+    @endif
 
     <!-- Open Graph (Facebook / WhatsApp / LinkedIn) -->
     <meta property="og:type" content="@yield('og_type', 'website')" />

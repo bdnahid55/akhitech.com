@@ -427,14 +427,22 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-md-6 form-group">
-                                        <label for="google_analytics_id">গুগল অ্যানালিটিক্স আইডি (Google Analytics Measurement ID)</label>
+                                    <div class="col-md-4 form-group">
+                                        <label for="google_analytics_id">গুগল অ্যানালিটিক্স আইডি (Google Analytics ID)</label>
                                         <input type="text" name="google_analytics_id" id="google_analytics_id" class="form-control" value="{{ old('google_analytics_id', $settings['google_analytics_id'] ?? '') }}" placeholder="যেমন: G-XXXXXXXXXX">
+                                        <small class="text-muted">Google Analytics 4 Measurement ID</small>
                                     </div>
 
-                                    <div class="col-md-6 form-group">
-                                        <label for="google_search_console_code">গুগল সার্চ কনসোল ভেরিফিকেশন কোড (Search Console Code)</label>
+                                    <div class="col-md-4 form-group">
+                                        <label for="google_search_console_code">গুগল সার্চ কনসোল কোড (Search Console Code)</label>
                                         <input type="text" name="google_search_console_code" id="google_search_console_code" class="form-control" value="{{ old('google_search_console_code', $settings['google_search_console_code'] ?? '') }}" placeholder="google-site-verification কোড">
+                                        <small class="text-muted">গুগল সাইট ভেরিফিকেশন কোড বা মেটা ট্যাগ</small>
+                                    </div>
+
+                                    <div class="col-md-4 form-group">
+                                        <label for="bing_webmaster_code">বিং ওয়েবমাস্টার ভেরিফিকেশন কোড (Bing Webmaster Code)</label>
+                                        <input type="text" name="bing_webmaster_code" id="bing_webmaster_code" class="form-control" value="{{ old('bing_webmaster_code', $settings['bing_webmaster_code'] ?? '') }}" placeholder="msvalidate.01 কোড">
+                                        <small class="text-muted">Bing Webmaster Tools msvalidate.01 কোড বা মেটা ট্যাগ</small>
                                     </div>
                                 </div>
                             </div>

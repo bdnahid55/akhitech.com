@@ -14,9 +14,11 @@ use App\Models\Service;
 use App\Models\Subscriber;
 use App\Models\TeamMember;
 use App\Models\Testimonial;
+use App\Services\SitemapService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\File;
 use Illuminate\View\View;
 
 class PageController extends Controller
@@ -173,25 +175,16 @@ class PageController extends Controller
      */
     public function sitemap(): Response
     {
-        $staticUrls = [
-            route('home'),
-            route('about'),
-            route('services'),
-            route('packages'),
-            route('portfolio'),
-            route('blog'),
-            route('contact'),
-            route('quote'),
-            route('privacy'),
-            route('terms'),
-        ];
+        $filePath = public_path('sitemap.xml');
 
-        $pages = Page::where('is_active', true)->orderBy('updated_at', 'desc')->get();
-        $portfolios = Portfolio::where('is_active', true)->orderBy('updated_at', 'desc')->get();
-        $posts = Post::where('is_published', true)->orderBy('updated_at', 'desc')->get();
+        if (! app()->environment('testing') && File::exists($filePath)) {
+            return response(File::get($filePath), 200)
+                ->header('Content-Type', 'text/xml');
+        }
 
-        return response()
-            ->view('pages.sitemap', compact('staticUrls', 'pages', 'portfolios', 'posts'))
+        $xml = SitemapService::renderXml();
+
+        return response($xml, 200)
             ->header('Content-Type', 'text/xml');
     }
 

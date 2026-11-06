@@ -159,6 +159,12 @@
                                 <p>ওয়েবসাইট সেটিংস</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.sitemap.index') }}" class="nav-link {{ request()->routeIs('admin.sitemap*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-sitemap"></i>
+                                <p>এসইও সাইটম্যাপ</p>
+                            </a>
+                        </li>
                     @endcan
                 @endcanany
 

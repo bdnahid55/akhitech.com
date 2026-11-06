@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Admin\RoleController as AdminRoleController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
+use App\Http\Controllers\Admin\SitemapController as AdminSitemapController;
 use App\Http\Controllers\Admin\SubscriberController as AdminSubscriberController;
 use App\Http\Controllers\Admin\TeamMemberController as AdminTeamMemberController;
 use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
@@ -104,6 +105,11 @@ Route::middleware(['auth', AdminInactivityTimeout::class])->prefix('admin')->nam
     // Website Global Settings
     Route::get('settings', [AdminSettingController::class, 'edit'])->name('settings.edit');
     Route::put('settings', [AdminSettingController::class, 'update'])->name('settings.update');
+
+    // SEO XML Sitemap Management
+    Route::get('sitemap', [AdminSitemapController::class, 'index'])->name('sitemap.index');
+    Route::post('sitemap/generate', [AdminSitemapController::class, 'generate'])->name('sitemap.generate');
+    Route::get('sitemap/download', [AdminSitemapController::class, 'download'])->name('sitemap.download');
 
     // Admin Accounts Management
     Route::post('admins/{admin}/force-logout', [AdminUserController::class, 'forceLogout'])->name('admins.force_logout');

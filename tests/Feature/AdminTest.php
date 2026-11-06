@@ -315,6 +315,30 @@ class AdminTest extends TestCase
     }
 
     /**
+     * Admin can configure Google Search Console and Bing Webmaster verification codes and they render on frontend.
+     */
+    public function test_admin_can_configure_bing_and_google_verification_codes(): void
+    {
+        $user = $this->createSuperAdmin();
+
+        // Submit both raw code and full meta tag formats
+        $response = $this->actingAs($user)->put('/admin/settings', [
+            'google_search_console_code' => '<meta name="google-site-verification" content="GOOGLE-VERIFY-12345" />',
+            'bing_webmaster_code' => '<meta name="msvalidate.01" content="BING-VERIFY-67890" />',
+        ]);
+
+        $response->assertRedirect('/admin/settings');
+        $this->assertEquals('GOOGLE-VERIFY-12345', Setting::get('google_search_console_code'));
+        $this->assertEquals('BING-VERIFY-67890', Setting::get('bing_webmaster_code'));
+
+        // Verify frontend displays both meta tags
+        $homeResponse = $this->get('/');
+        $homeResponse->assertStatus(200);
+        $homeResponse->assertSee('<meta name="google-site-verification" content="GOOGLE-VERIFY-12345" />', false);
+        $homeResponse->assertSee('<meta name="msvalidate.01" content="BING-VERIFY-67890" />', false);
+    }
+
+    /**
      * Admin can view, create, edit, and delete testimonials.
      */
     public function test_admin_can_manage_testimonials(): void

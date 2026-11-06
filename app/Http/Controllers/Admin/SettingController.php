@@ -98,6 +98,7 @@ class SettingController extends Controller
             'default_og_image' => FileUploadService::imageRules(),
             'google_analytics_id' => ['nullable', 'string', 'max:100'],
             'google_search_console_code' => ['nullable', 'string', 'max:255'],
+            'bing_webmaster_code' => ['nullable', 'string', 'max:255'],
         ]);
 
         $fileKeys = [
@@ -120,6 +121,15 @@ class SettingController extends Controller
             } else {
                 unset($validated[$fileKey]);
             }
+        }
+
+        // Auto-extract content attribute if user pastes full meta tag
+        if (! empty($validated['google_search_console_code']) && preg_match('/content=["\']([^"\']+)["\']/i', (string) $validated['google_search_console_code'], $matches)) {
+            $validated['google_search_console_code'] = $matches[1];
+        }
+
+        if (! empty($validated['bing_webmaster_code']) && preg_match('/content=["\']([^"\']+)["\']/i', (string) $validated['bing_webmaster_code'], $matches)) {
+            $validated['bing_webmaster_code'] = $matches[1];
         }
 
         foreach ($validated as $key => $value) {
