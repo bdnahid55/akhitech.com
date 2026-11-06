@@ -1604,7 +1604,7 @@ header {
 
 .service_item {
   background: var(--colorWhite);
-  padding: 30px;
+  padding: 30px 22px 25px 22px;
   border-radius: 10px;
   margin-bottom: 25px;
   position: relative;
@@ -1617,6 +1617,7 @@ header {
   -moz-transition: all linear .3s;
   -ms-transition: all linear .3s;
   -o-transition: all linear .3s;
+  min-height: 400px;
   height: calc(100% - 25px);
   display: flex;
   flex-direction: column;
@@ -1636,15 +1637,15 @@ header {
 
 .service_item .icon {
   display: block;
-  width: 80px;
-  height: 80px;
-  line-height: 80px;
+  width: 75px;
+  height: 75px;
+  line-height: 75px;
   text-align: center;
   margin: 0 auto;
   background: #198754;
   border-radius: 50%;
   color: var(--colorWhite);
-  font-size: 27px;
+  font-size: 26px;
   flex-shrink: 0;
   transition: all linear .3s;
   -webkit-transition: all linear .3s;
@@ -1655,16 +1656,17 @@ header {
 
 .service_item h2 {
   color: var(--colorBlack);
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 600;
-  line-height: 1.25;
-  margin-top: 30px;
-  margin-bottom: 15px;
-  min-height: 58px;
+  line-height: 1.3;
+  margin-top: 20px;
+  margin-bottom: 12px;
+  min-height: 56px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  flex-shrink: 0;
   transition: all linear .3s;
   -webkit-transition: all linear .3s;
   -moz-transition: all linear .3s;
@@ -1677,10 +1679,10 @@ header {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 78px;
-  line-height: 26px;
+  font-size: 15px;
+  line-height: 24px;
+  min-height: 72px;
   margin-bottom: 20px;
-  flex-grow: 1;
   transition: all linear .3s;
   -webkit-transition: all linear .3s;
   -moz-transition: all linear .3s;
@@ -1735,11 +1737,11 @@ header {
 }
 
 .service_item:hover a {
-  bottom: 30px;
+  bottom: 25px;
 }
 
 .service_item:hover p {
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 }
 
 /* services end */

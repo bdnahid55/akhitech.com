@@ -105,7 +105,7 @@
             display: block !important;
         }
 
-        /* Service Item Equal Height */
+        /* Service Item Equal Height & Hover Space */
         .services .row > [class*='col-'],
         .services_page .row > [class*='col-'] {
             display: flex !important;
@@ -113,31 +113,51 @@
         }
 
         .service_item {
+            min-height: 400px !important;
             height: calc(100% - 25px) !important;
             display: flex !important;
             flex-direction: column !important;
+            padding: 30px 22px 25px 22px !important;
+        }
+
+        .service_item .icon {
+            width: 75px !important;
+            height: 75px !important;
+            line-height: 75px !important;
+            font-size: 26px !important;
+            flex-shrink: 0 !important;
         }
 
         .service_item h2 {
-            min-height: 58px !important;
+            min-height: 56px !important;
             display: -webkit-box !important;
             -webkit-line-clamp: 2 !important;
             -webkit-box-orient: vertical !important;
             overflow: hidden !important;
-            line-height: 1.25 !important;
-            margin-top: 25px !important;
-            margin-bottom: 15px !important;
+            font-size: 22px !important;
+            line-height: 1.3 !important;
+            margin-top: 20px !important;
+            margin-bottom: 12px !important;
+            flex-shrink: 0 !important;
         }
 
         .service_item p {
-            min-height: 78px !important;
+            min-height: 72px !important;
             display: -webkit-box !important;
             -webkit-line-clamp: 3 !important;
             -webkit-box-orient: vertical !important;
             overflow: hidden !important;
-            line-height: 26px !important;
+            font-size: 15px !important;
+            line-height: 24px !important;
             margin-bottom: 20px !important;
-            flex-grow: 1 !important;
+        }
+
+        .service_item:hover a {
+            bottom: 25px !important;
+        }
+
+        .service_item:hover p {
+            margin-bottom: 20px !important;
         }
 
         @media (max-width: 575.99px) {
