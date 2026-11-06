@@ -70,6 +70,10 @@
                     @error('roles') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                 </div>
 
+                <div class="alert alert-info py-2 px-3 mb-3">
+                    <small><i class="fas fa-shield-alt mr-1"></i> <strong>স্ট্রং পাসওয়ার্ড নীতিমালা:</strong> পাসওয়ার্ডে কমপক্ষে ৮ অক্ষর, বড় হাতের অক্ষর (A-Z), ছোট হাতের অক্ষর (a-z), সংখ্যা (0-9) এবং একটি স্পেশাল ক্যারেক্টার (যেমন: @$!%*#?&) থাকতে হবে।</small>
+                </div>
+
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label for="password">পাসওয়ার্ড <span class="text-danger">*</span></label>

@@ -107,5 +107,12 @@ return [
                 'roles.manage' => 'রোল তৈরি, সম্পাদনা ও পারমিশন অ্যাসাইন',
             ],
         ],
+        'login_activities' => [
+            'label' => 'লগইন অ্যাক্টিভিটি ও সিকিউরিটি',
+            'permissions' => [
+                'login_activities.view' => 'লগইন হিস্টোরি ও লগ দেখা',
+                'login_activities.delete' => 'লগইন হিস্টোরি মুছে ফেলা',
+            ],
+        ],
     ],
 ];

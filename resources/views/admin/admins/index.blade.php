@@ -62,6 +62,12 @@
                                 </td>
                                 <td class="text-right">
                                     @can('admins.edit')
+                                        <form action="{{ route('admin.admins.force_logout', $admin) }}" method="POST" class="d-inline mr-1" onsubmit="return confirm('আপনি কি নিশ্চিত এই এডমিনের সকল সক্রিয় সেশন ফোর্স লগআউট করতে চান?');">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-warning" title="সকল সেশন ফোর্স লগআউট করুন">
+                                                <i class="fas fa-sign-out-alt"></i>
+                                            </button>
+                                        </form>
                                         <a href="{{ route('admin.admins.edit', $admin) }}" class="btn btn-sm btn-info mr-1" title="সম্পাদনা">
                                             <i class="fas fa-edit"></i>
                                         </a>

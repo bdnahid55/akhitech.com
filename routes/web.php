@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\InquiryController as AdminInquiryController;
+use App\Http\Controllers\Admin\LoginActivityController as AdminLoginActivityController;
 use App\Http\Controllers\Admin\PackageController as AdminPackageController;
 use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\PortfolioController as AdminPortfolioController;
@@ -104,8 +105,14 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::put('settings', [AdminSettingController::class, 'update'])->name('settings.update');
 
     // Admin Accounts Management
+    Route::post('admins/{admin}/force-logout', [AdminUserController::class, 'forceLogout'])->name('admins.force_logout');
     Route::resource('admins', AdminUserController::class);
 
     // Roles & Permissions Management
     Route::resource('roles', AdminRoleController::class);
+
+    // Login Activity & Security Logs
+    Route::get('login-activities', [AdminLoginActivityController::class, 'index'])->name('login_activities.index');
+    Route::delete('login-activities/clear', [AdminLoginActivityController::class, 'clear'])->name('login_activities.clear');
+    Route::delete('login-activities/{activity}', [AdminLoginActivityController::class, 'destroy'])->name('login_activities.destroy');
 });

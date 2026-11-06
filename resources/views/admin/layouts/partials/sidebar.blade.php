@@ -122,7 +122,7 @@
                     @endcan
                 @endcanany
 
-                @canany(['admins.view', 'roles.manage', 'settings.view'])
+                @canany(['admins.view', 'roles.manage', 'login_activities.view', 'settings.view'])
                     <li class="nav-header">কনফিগারেশন ও ইউজার</li>
 
                     @can('admins.view')
@@ -139,6 +139,15 @@
                             <a href="{{ route('admin.roles.index') }}" class="nav-link {{ request()->routeIs('admin.roles*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-user-lock"></i>
                                 <p>রোল ও পারমিশন</p>
+                            </a>
+                        </li>
+                    @endcan
+
+                    @can('login_activities.view')
+                        <li class="nav-item">
+                            <a href="{{ route('admin.login_activities.index') }}" class="nav-link {{ request()->routeIs('admin.login_activities*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-history"></i>
+                                <p>লগইন অ্যাক্টিভিটি</p>
                             </a>
                         </li>
                     @endcan

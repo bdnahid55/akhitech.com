@@ -74,7 +74,8 @@
                 </div>
 
                 <div class="alert alert-info py-2 px-3 mb-3">
-                    <small><i class="fas fa-info-circle mr-1"></i> পাসওয়ার্ড পরিবর্তন করতে না চাইলে নিচের পাসওয়ার্ড ঘরগুলো ফাঁকা রাখুন।</small>
+                    <small class="d-block mb-1"><i class="fas fa-info-circle mr-1"></i> পাসওয়ার্ড পরিবর্তন করতে না চাইলে নিচের পাসওয়ার্ড ঘরগুলো ফাঁকা রাখুন।</small>
+                    <small class="d-block"><i class="fas fa-shield-alt mr-1"></i> <strong>স্ট্রং পাসওয়ার্ড নীতিমালা:</strong> পাসওয়ার্ডে কমপক্ষে ৮ অক্ষর, বড় হাতের অক্ষর (A-Z), ছোট হাতের অক্ষর (a-z), সংখ্যা (0-9) এবং স্পেশাল ক্যারেক্টার থাকতে হবে।</small>
                 </div>
 
                 <div class="row">

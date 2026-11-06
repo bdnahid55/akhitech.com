@@ -17,6 +17,7 @@ use App\Models\Testimonial;
 use App\Models\User;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -601,8 +602,8 @@ class AdminTest extends TestCase
         $storeResponse = $this->actingAs($superAdmin)->post('/admin/admins', [
             'name' => 'New Manager',
             'email' => 'manager@akhitech.com',
-            'password' => 'secretpassword123',
-            'password_confirmation' => 'secretpassword123',
+            'password' => 'Secret@12345',
+            'password_confirmation' => 'Secret@12345',
             'roles' => ['Editor'],
         ]);
 
@@ -766,5 +767,130 @@ class AdminTest extends TestCase
         $response->assertRedirect('/admin/roles');
         $response->assertSessionHas('error');
         $this->assertDatabaseHas('roles', ['name' => 'Super Admin']);
+    }
+
+    /**
+     * Test login rate limiting and brute force protection.
+     */
+    public function test_login_rate_limiting_and_brute_force_protection(): void
+    {
+        $user = $this->createSuperAdmin([
+            'email' => 'victim@akhitech.com',
+            'password' => bcrypt('Correct@Password123'),
+        ]);
+
+        // 5 consecutive failed login attempts
+        for ($i = 0; $i < 5; $i++) {
+            $response = $this->from('/admin/login')->post('/admin/login', [
+                'email' => 'victim@akhitech.com',
+                'password' => 'wrongpassword',
+            ]);
+            $response->assertRedirect('/admin/login');
+            $response->assertSessionHas('error');
+        }
+
+        // 6th attempt should be blocked by RateLimiter
+        $blockedResponse = $this->from('/admin/login')->post('/admin/login', [
+            'email' => 'victim@akhitech.com',
+            'password' => 'wrongpassword',
+        ]);
+
+        $blockedResponse->assertRedirect('/admin/login');
+        $this->assertDatabaseHas('login_activities', [
+            'email' => 'victim@akhitech.com',
+            'status' => 'locked',
+        ]);
+    }
+
+    /**
+     * Test login activities are recorded on success and failure.
+     */
+    public function test_login_activity_recording_and_viewing(): void
+    {
+        $superAdmin = $this->createSuperAdmin([
+            'email' => 'logger@akhitech.com',
+            'password' => bcrypt('Strong@Secret123'),
+        ]);
+
+        // Failed attempt
+        $this->post('/admin/login', [
+            'email' => 'logger@akhitech.com',
+            'password' => 'wrongpass',
+        ]);
+
+        $this->assertDatabaseHas('login_activities', [
+            'email' => 'logger@akhitech.com',
+            'status' => 'failed',
+        ]);
+
+        // Successful attempt
+        $this->post('/admin/login', [
+            'email' => 'logger@akhitech.com',
+            'password' => 'Strong@Secret123',
+        ]);
+
+        $this->assertDatabaseHas('login_activities', [
+            'email' => 'logger@akhitech.com',
+            'status' => 'successful',
+        ]);
+
+        // Super Admin can view login activities page
+        $viewResponse = $this->actingAs($superAdmin)->get('/admin/login-activities');
+        $viewResponse->assertStatus(200);
+        $viewResponse->assertSee('logger@akhitech.com');
+    }
+
+    /**
+     * Test admin force logout terminates user sessions.
+     */
+    public function test_force_logout_terminates_admin_sessions(): void
+    {
+        $superAdmin = $this->createSuperAdmin();
+        $targetUser = User::factory()->create();
+
+        // Simulate active session in sessions table
+        DB::table('sessions')->insert([
+            'id' => 'test_session_id_123',
+            'user_id' => $targetUser->id,
+            'ip_address' => '127.0.0.1',
+            'user_agent' => 'Mozilla/5.0 Test Browser',
+            'payload' => base64_encode(serialize(['_token' => 'abc'])),
+            'last_activity' => time(),
+        ]);
+
+        $this->assertDatabaseHas('sessions', ['id' => 'test_session_id_123']);
+
+        // Force logout the target user
+        $response = $this->actingAs($superAdmin)->post("/admin/admins/{$targetUser->id}/force-logout");
+        $response->assertRedirect('/admin/admins');
+
+        $this->assertDatabaseMissing('sessions', ['id' => 'test_session_id_123']);
+    }
+
+    /**
+     * Test strong password policy validation rejects weak passwords.
+     */
+    public function test_strong_password_policy_rejects_weak_passwords(): void
+    {
+        $superAdmin = $this->createSuperAdmin();
+
+        // 1. Password without mixedCase and symbols (fails)
+        $weakResponse = $this->actingAs($superAdmin)->post('/admin/admins', [
+            'name' => 'Weak User',
+            'email' => 'weak@example.com',
+            'password' => 'weakpassword123',
+            'password_confirmation' => 'weakpassword123',
+        ]);
+        $weakResponse->assertSessionHasErrors('password');
+
+        // 2. Strong password with lowercase, uppercase, numbers and symbols (succeeds)
+        $strongResponse = $this->actingAs($superAdmin)->post('/admin/admins', [
+            'name' => 'Strong User',
+            'email' => 'strong@example.com',
+            'password' => 'Strong#Admin999!',
+            'password_confirmation' => 'Strong#Admin999!',
+        ]);
+        $strongResponse->assertRedirect('/admin/admins');
+        $this->assertDatabaseHas('users', ['email' => 'strong@example.com']);
     }
 }
