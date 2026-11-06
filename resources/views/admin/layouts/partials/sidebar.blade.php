@@ -98,7 +98,14 @@
                     </a>
                 </li>
 
-                <li class="nav-header">কনফিগারেশন</li>
+                <li class="nav-header">কনফিগারেশন ও ইউজার</li>
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.admins.index') }}" class="nav-link {{ request()->routeIs('admin.admins*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-user-shield"></i>
+                        <p>এডমিন একাউন্টস</p>
+                    </a>
+                </li>
 
                 <li class="nav-item">
                     <a href="{{ route('admin.settings.edit') }}" class="nav-link {{ request()->routeIs('admin.settings*') ? 'active' : '' }}">

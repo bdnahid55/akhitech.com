@@ -555,4 +555,71 @@ class AdminTest extends TestCase
             'id' => $package->id,
         ]);
     }
+
+    /**
+     * Admin can view, create, edit, and delete admin accounts.
+     */
+    public function test_admin_can_manage_admin_users(): void
+    {
+        $superAdmin = User::factory()->create([
+            'name' => 'Super Admin',
+            'email' => 'super@akhitech.com',
+        ]);
+
+        // 1. View admins index
+        $indexResponse = $this->actingAs($superAdmin)->get('/admin/admins');
+        $indexResponse->assertStatus(200);
+        $indexResponse->assertSee('Super Admin');
+        $indexResponse->assertSee('super@akhitech.com');
+
+        // 2. View create form
+        $createResponse = $this->actingAs($superAdmin)->get('/admin/admins/create');
+        $createResponse->assertStatus(200);
+
+        // 3. Store new admin
+        $storeResponse = $this->actingAs($superAdmin)->post('/admin/admins', [
+            'name' => 'New Manager',
+            'email' => 'manager@akhitech.com',
+            'password' => 'secretpassword123',
+            'password_confirmation' => 'secretpassword123',
+        ]);
+
+        $storeResponse->assertRedirect('/admin/admins');
+        $this->assertDatabaseHas('users', [
+            'name' => 'New Manager',
+            'email' => 'manager@akhitech.com',
+        ]);
+
+        $newAdmin = User::where('email', 'manager@akhitech.com')->firstOrFail();
+
+        // 4. View edit form
+        $editResponse = $this->actingAs($superAdmin)->get("/admin/admins/{$newAdmin->id}/edit");
+        $editResponse->assertStatus(200);
+        $editResponse->assertSee('New Manager');
+
+        // 5. Update admin
+        $updateResponse = $this->actingAs($superAdmin)->put("/admin/admins/{$newAdmin->id}", [
+            'name' => 'Senior Manager',
+            'email' => 'seniormanager@akhitech.com',
+            'password' => '',
+            'password_confirmation' => '',
+        ]);
+
+        $updateResponse->assertRedirect('/admin/admins');
+        $this->assertDatabaseHas('users', [
+            'id' => $newAdmin->id,
+            'name' => 'Senior Manager',
+            'email' => 'seniormanager@akhitech.com',
+        ]);
+
+        // 6. Cannot delete self
+        $deleteSelfResponse = $this->actingAs($superAdmin)->delete("/admin/admins/{$superAdmin->id}");
+        $deleteSelfResponse->assertRedirect('/admin/admins');
+        $this->assertDatabaseHas('users', ['id' => $superAdmin->id]);
+
+        // 7. Delete other admin
+        $deleteOtherResponse = $this->actingAs($superAdmin)->delete("/admin/admins/{$newAdmin->id}");
+        $deleteOtherResponse->assertRedirect('/admin/admins');
+        $this->assertDatabaseMissing('users', ['id' => $newAdmin->id]);
+    }
 }
