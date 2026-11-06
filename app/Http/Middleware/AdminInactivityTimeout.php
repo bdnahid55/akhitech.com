@@ -20,7 +20,7 @@ class AdminInactivityTimeout
     {
         if (Auth::check()) {
             $lastActivity = session('admin_last_activity_time');
-            $timeoutSeconds = (int) config('auth.admin_idle_timeout', 3600);
+            $timeoutSeconds = (int) config('auth.admin_idle_timeout', 900);
 
             if ($lastActivity !== null && (time() - (int) $lastActivity) > $timeoutSeconds) {
                 Auth::logout();

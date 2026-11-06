@@ -6,9 +6,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Testimonial;
+use App\Services\FileUploadService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
@@ -50,20 +50,14 @@ class TestimonialController extends Controller
             'rating' => ['required', 'integer', 'min:1', 'max:5'],
             'order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['boolean'],
-            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:2048'],
+            'image' => FileUploadService::imageRules(),
         ]);
 
         $validated['is_active'] = $request->boolean('is_active', true);
         $validated['order'] = (int) ($validated['order'] ?? 0);
 
         if ($request->hasFile('image')) {
-            $destDir = public_path('uploads/testimonials');
-            if (! File::exists($destDir)) {
-                File::makeDirectory($destDir, 0755, true);
-            }
-            $imageName = time().'_'.uniqid().'.'.$request->file('image')->getClientOriginalExtension();
-            $request->file('image')->move($destDir, $imageName);
-            $validated['image'] = 'uploads/testimonials/'.$imageName;
+            $validated['image'] = FileUploadService::storeImage($request->file('image'), 'testimonials');
         }
 
         Testimonial::create($validated);
@@ -96,23 +90,15 @@ class TestimonialController extends Controller
             'rating' => ['required', 'integer', 'min:1', 'max:5'],
             'order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['boolean'],
-            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:2048'],
+            'image' => FileUploadService::imageRules(),
         ]);
 
         $validated['is_active'] = $request->boolean('is_active', true);
         $validated['order'] = (int) ($validated['order'] ?? 0);
 
         if ($request->hasFile('image')) {
-            $destDir = public_path('uploads/testimonials');
-            if (! File::exists($destDir)) {
-                File::makeDirectory($destDir, 0755, true);
-            }
-            if ($testimonial->image && ! str_starts_with($testimonial->image, 'assets/') && File::exists(public_path($testimonial->image))) {
-                File::delete(public_path($testimonial->image));
-            }
-            $imageName = time().'_'.uniqid().'.'.$request->file('image')->getClientOriginalExtension();
-            $request->file('image')->move($destDir, $imageName);
-            $validated['image'] = 'uploads/testimonials/'.$imageName;
+            FileUploadService::deleteOldImage($testimonial->image);
+            $validated['image'] = FileUploadService::storeImage($request->file('image'), 'testimonials');
         }
 
         $testimonial->update($validated);
@@ -128,9 +114,7 @@ class TestimonialController extends Controller
     {
         Gate::authorize('testimonials.delete');
 
-        if ($testimonial->image && ! str_starts_with($testimonial->image, 'assets/') && File::exists(public_path($testimonial->image))) {
-            File::delete(public_path($testimonial->image));
-        }
+        FileUploadService::deleteOldImage($testimonial->image);
 
         $testimonial->delete();
 

@@ -6,9 +6,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
+use App\Services\FileUploadService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
@@ -36,9 +36,9 @@ class SettingController extends Controller
         $validated = $request->validate([
             'site_name' => ['nullable', 'string', 'max:255'],
             'site_tagline' => ['nullable', 'string', 'max:255'],
-            'header_logo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:2048'],
-            'footer_logo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:2048'],
-            'favicon' => ['nullable', 'file', 'mimes:ico,png,jpg,svg', 'max:1024'],
+            'header_logo' => FileUploadService::imageRules(),
+            'footer_logo' => FileUploadService::imageRules(),
+            'favicon' => FileUploadService::imageRules(),
             'contact_email' => ['nullable', 'email', 'max:255'],
             'contact_phone' => ['nullable', 'string', 'max:50'],
             'contact_address' => ['nullable', 'string', 'max:500'],
@@ -55,8 +55,8 @@ class SettingController extends Controller
             'banner_btn_text' => ['nullable', 'string', 'max:100'],
             'banner_btn_url' => ['nullable', 'string', 'max:255'],
             'banner_video_url' => ['nullable', 'string', 'max:255'],
-            'banner_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:4096'],
-            'banner_bg_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:4096'],
+            'banner_image' => FileUploadService::imageRules(),
+            'banner_bg_image' => FileUploadService::imageRules(),
 
             // About Settings
             'about_subtitle' => ['nullable', 'string', 'max:255'],
@@ -73,9 +73,9 @@ class SettingController extends Controller
             'about_counter_2_title' => ['nullable', 'string', 'max:100'],
             'about_support_title' => ['nullable', 'string', 'max:100'],
             'about_support_text' => ['nullable', 'string', 'max:255'],
-            'about_main_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:4096'],
-            'about_small_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:4096'],
-            'about_support_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:4096'],
+            'about_main_image' => FileUploadService::imageRules(),
+            'about_small_image' => FileUploadService::imageRules(),
+            'about_support_image' => FileUploadService::imageRules(),
 
             // Testimonial Settings
             'testimonial_subtitle' => ['nullable', 'string', 'max:255'],
@@ -95,7 +95,7 @@ class SettingController extends Controller
             'default_meta_title' => ['nullable', 'string', 'max:255'],
             'default_meta_description' => ['nullable', 'string', 'max:500'],
             'default_meta_keywords' => ['nullable', 'string', 'max:255'],
-            'default_og_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'default_og_image' => FileUploadService::imageRules(),
             'google_analytics_id' => ['nullable', 'string', 'max:100'],
             'google_search_console_code' => ['nullable', 'string', 'max:255'],
         ]);
@@ -115,13 +115,8 @@ class SettingController extends Controller
         foreach ($fileKeys as $fileKey) {
             if ($request->hasFile($fileKey)) {
                 $oldFile = Setting::get($fileKey);
-                if ($oldFile && File::exists(public_path($oldFile))) {
-                    File::delete(public_path($oldFile));
-                }
-
-                $fileName = time().'_'.$fileKey.'_'.uniqid().'.'.$request->file($fileKey)->getClientOriginalExtension();
-                $request->file($fileKey)->move(public_path('uploads/settings'), $fileName);
-                $validated[$fileKey] = 'uploads/settings/'.$fileName;
+                FileUploadService::deleteOldImage($oldFile);
+                $validated[$fileKey] = FileUploadService::storeImage($request->file($fileKey), 'settings', $fileKey);
             } else {
                 unset($validated[$fileKey]);
             }

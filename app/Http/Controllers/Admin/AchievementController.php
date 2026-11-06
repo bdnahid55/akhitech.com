@@ -6,9 +6,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Achievement;
+use App\Services\FileUploadService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
@@ -50,7 +50,7 @@ class AchievementController extends Controller
             'icon' => ['nullable', 'string', 'max:100'],
             'order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['boolean'],
-            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:2048'],
+            'image' => FileUploadService::imageRules(),
         ]);
 
         $validated['suffix'] = $validated['suffix'] ?? '+';
@@ -58,13 +58,7 @@ class AchievementController extends Controller
         $validated['order'] = (int) ($validated['order'] ?? 0);
 
         if ($request->hasFile('image')) {
-            $destDir = public_path('uploads/achievements');
-            if (! File::exists($destDir)) {
-                File::makeDirectory($destDir, 0755, true);
-            }
-            $imageName = time().'_'.uniqid().'.'.$request->file('image')->getClientOriginalExtension();
-            $request->file('image')->move($destDir, $imageName);
-            $validated['image'] = 'uploads/achievements/'.$imageName;
+            $validated['image'] = FileUploadService::storeImage($request->file('image'), 'achievements');
         }
 
         Achievement::create($validated);
@@ -97,7 +91,7 @@ class AchievementController extends Controller
             'icon' => ['nullable', 'string', 'max:100'],
             'order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['boolean'],
-            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:2048'],
+            'image' => FileUploadService::imageRules(),
         ]);
 
         $validated['suffix'] = $validated['suffix'] ?? '+';
@@ -105,16 +99,8 @@ class AchievementController extends Controller
         $validated['order'] = (int) ($validated['order'] ?? 0);
 
         if ($request->hasFile('image')) {
-            $destDir = public_path('uploads/achievements');
-            if (! File::exists($destDir)) {
-                File::makeDirectory($destDir, 0755, true);
-            }
-            if ($achievement->image && ! str_starts_with($achievement->image, 'assets/') && File::exists(public_path($achievement->image))) {
-                File::delete(public_path($achievement->image));
-            }
-            $imageName = time().'_'.uniqid().'.'.$request->file('image')->getClientOriginalExtension();
-            $request->file('image')->move($destDir, $imageName);
-            $validated['image'] = 'uploads/achievements/'.$imageName;
+            FileUploadService::deleteOldImage($achievement->image);
+            $validated['image'] = FileUploadService::storeImage($request->file('image'), 'achievements');
         }
 
         $achievement->update($validated);
@@ -130,9 +116,7 @@ class AchievementController extends Controller
     {
         Gate::authorize('achievements.delete');
 
-        if ($achievement->image && ! str_starts_with($achievement->image, 'assets/') && File::exists(public_path($achievement->image))) {
-            File::delete(public_path($achievement->image));
-        }
+        FileUploadService::deleteOldImage($achievement->image);
 
         $achievement->delete();
 

@@ -124,6 +124,6 @@ return [
     |
     */
 
-    'admin_idle_timeout' => (int) env('ADMIN_IDLE_TIMEOUT', 3600),
+    'admin_idle_timeout' => (int) env('ADMIN_IDLE_TIMEOUT', 900),
 
 ];

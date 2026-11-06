@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Portfolio;
+use App\Services\FileUploadService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -52,7 +53,7 @@ class PortfolioController extends Controller
             'end_date' => ['nullable', 'string', 'max:100'],
             'project_url' => ['nullable', 'url', 'max:255'],
             'description' => ['nullable', 'string'],
-            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'image' => FileUploadService::imageRules(),
             'is_featured' => ['boolean'],
             'is_active' => ['boolean'],
         ]);
@@ -62,9 +63,7 @@ class PortfolioController extends Controller
             : Str::slug($validated['title']).'-'.rand(100, 999);
 
         if ($request->hasFile('image')) {
-            $imageName = time().'_'.uniqid().'.'.$request->file('image')->getClientOriginalExtension();
-            $request->file('image')->move(public_path('uploads/portfolios'), $imageName);
-            $validated['image'] = 'uploads/portfolios/'.$imageName;
+            $validated['image'] = FileUploadService::storeImage($request->file('image'), 'portfolios');
         }
 
         $validated['is_featured'] = $request->boolean('is_featured');
@@ -102,7 +101,7 @@ class PortfolioController extends Controller
             'end_date' => ['nullable', 'string', 'max:100'],
             'project_url' => ['nullable', 'url', 'max:255'],
             'description' => ['nullable', 'string'],
-            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'image' => FileUploadService::imageRules(),
             'is_featured' => ['boolean'],
             'is_active' => ['boolean'],
         ]);
@@ -112,9 +111,8 @@ class PortfolioController extends Controller
             : $portfolio->slug;
 
         if ($request->hasFile('image')) {
-            $imageName = time().'_'.uniqid().'.'.$request->file('image')->getClientOriginalExtension();
-            $request->file('image')->move(public_path('uploads/portfolios'), $imageName);
-            $validated['image'] = 'uploads/portfolios/'.$imageName;
+            FileUploadService::deleteOldImage($portfolio->image);
+            $validated['image'] = FileUploadService::storeImage($request->file('image'), 'portfolios');
         }
 
         $validated['is_featured'] = $request->boolean('is_featured');
@@ -132,6 +130,8 @@ class PortfolioController extends Controller
     public function destroy(Portfolio $portfolio): RedirectResponse
     {
         Gate::authorize('portfolios.delete');
+
+        FileUploadService::deleteOldImage($portfolio->image);
 
         $portfolio->delete();
 

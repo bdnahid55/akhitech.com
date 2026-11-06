@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Post;
+use App\Services\FileUploadService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -49,7 +50,7 @@ class PostController extends Controller
             'excerpt' => ['nullable', 'string', 'max:1000'],
             'content' => ['required', 'string'],
             'author' => ['nullable', 'string', 'max:100'],
-            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'image' => FileUploadService::imageRules(),
             'published_at' => ['nullable', 'date'],
             'is_published' => ['boolean'],
         ]);
@@ -59,9 +60,7 @@ class PostController extends Controller
             : Str::slug($validated['title']).'-'.rand(100, 999);
 
         if ($request->hasFile('image')) {
-            $imageName = time().'_'.uniqid().'.'.$request->file('image')->getClientOriginalExtension();
-            $request->file('image')->move(public_path('uploads/posts'), $imageName);
-            $validated['image'] = 'uploads/posts/'.$imageName;
+            $validated['image'] = FileUploadService::storeImage($request->file('image'), 'posts');
         }
 
         $validated['author'] = $validated['author'] ?? 'এডমিন';
@@ -97,7 +96,7 @@ class PostController extends Controller
             'excerpt' => ['nullable', 'string', 'max:1000'],
             'content' => ['required', 'string'],
             'author' => ['nullable', 'string', 'max:100'],
-            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'image' => FileUploadService::imageRules(),
             'published_at' => ['nullable', 'date'],
             'is_published' => ['boolean'],
         ]);
@@ -107,9 +106,8 @@ class PostController extends Controller
             : $post->slug;
 
         if ($request->hasFile('image')) {
-            $imageName = time().'_'.uniqid().'.'.$request->file('image')->getClientOriginalExtension();
-            $request->file('image')->move(public_path('uploads/posts'), $imageName);
-            $validated['image'] = 'uploads/posts/'.$imageName;
+            FileUploadService::deleteOldImage($post->image);
+            $validated['image'] = FileUploadService::storeImage($request->file('image'), 'posts');
         }
 
         $validated['is_published'] = $request->boolean('is_published');
@@ -126,6 +124,8 @@ class PostController extends Controller
     public function destroy(Post $post): RedirectResponse
     {
         Gate::authorize('posts.delete');
+
+        FileUploadService::deleteOldImage($post->image);
 
         $post->delete();
 

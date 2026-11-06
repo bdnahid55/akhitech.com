@@ -6,9 +6,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\TeamMember;
+use App\Services\FileUploadService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -55,7 +55,7 @@ class TeamMemberController extends Controller
             'behance' => ['nullable', 'url', 'max:255'],
             'order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['boolean'],
-            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:2048'],
+            'image' => FileUploadService::imageRules(),
         ]);
 
         $validated['slug'] = ! empty($validated['slug'])
@@ -66,13 +66,7 @@ class TeamMemberController extends Controller
         $validated['order'] = (int) ($validated['order'] ?? 0);
 
         if ($request->hasFile('image')) {
-            $destDir = public_path('uploads/team');
-            if (! File::exists($destDir)) {
-                File::makeDirectory($destDir, 0755, true);
-            }
-            $imageName = time().'_'.uniqid().'.'.$request->file('image')->getClientOriginalExtension();
-            $request->file('image')->move($destDir, $imageName);
-            $validated['image'] = 'uploads/team/'.$imageName;
+            $validated['image'] = FileUploadService::storeImage($request->file('image'), 'team');
         }
 
         TeamMember::create($validated);
@@ -113,7 +107,7 @@ class TeamMemberController extends Controller
             'behance' => ['nullable', 'url', 'max:255'],
             'order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['boolean'],
-            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:2048'],
+            'image' => FileUploadService::imageRules(),
         ]);
 
         $validated['slug'] = ! empty($validated['slug'])
@@ -124,16 +118,8 @@ class TeamMemberController extends Controller
         $validated['order'] = (int) ($validated['order'] ?? 0);
 
         if ($request->hasFile('image')) {
-            $destDir = public_path('uploads/team');
-            if (! File::exists($destDir)) {
-                File::makeDirectory($destDir, 0755, true);
-            }
-            if ($member->image && ! str_starts_with($member->image, 'assets/') && File::exists(public_path($member->image))) {
-                File::delete(public_path($member->image));
-            }
-            $imageName = time().'_'.uniqid().'.'.$request->file('image')->getClientOriginalExtension();
-            $request->file('image')->move($destDir, $imageName);
-            $validated['image'] = 'uploads/team/'.$imageName;
+            FileUploadService::deleteOldImage($member->image);
+            $validated['image'] = FileUploadService::storeImage($request->file('image'), 'team');
         }
 
         $member->update($validated);
@@ -151,9 +137,7 @@ class TeamMemberController extends Controller
 
         $member = $team;
 
-        if ($member->image && ! str_starts_with($member->image, 'assets/') && File::exists(public_path($member->image))) {
-            File::delete(public_path($member->image));
-        }
+        FileUploadService::deleteOldImage($member->image);
 
         $member->delete();
 

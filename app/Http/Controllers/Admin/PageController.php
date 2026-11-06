@@ -6,9 +6,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Page;
+use App\Services\FileUploadService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -60,12 +60,12 @@ class PageController extends Controller
             'footer_column' => ['nullable', 'in:quick_links,legal'],
             'order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['boolean'],
-            'banner_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'banner_image' => FileUploadService::imageRules(),
             'meta_title' => ['nullable', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string', 'max:500'],
             'meta_keywords' => ['nullable', 'string', 'max:255'],
             'canonical_url' => ['nullable', 'url', 'max:255'],
-            'og_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'og_image' => FileUploadService::imageRules(),
         ]);
 
         $validated['slug'] = ! empty($validated['slug'])
@@ -73,15 +73,11 @@ class PageController extends Controller
             : Str::slug($validated['title']).'-'.rand(100, 999);
 
         if ($request->hasFile('banner_image')) {
-            $bannerName = time().'_banner_'.uniqid().'.'.$request->file('banner_image')->getClientOriginalExtension();
-            $request->file('banner_image')->move(public_path('uploads/pages'), $bannerName);
-            $validated['banner_image'] = 'uploads/pages/'.$bannerName;
+            $validated['banner_image'] = FileUploadService::storeImage($request->file('banner_image'), 'pages', 'banner_image');
         }
 
         if ($request->hasFile('og_image')) {
-            $ogName = time().'_og_'.uniqid().'.'.$request->file('og_image')->getClientOriginalExtension();
-            $request->file('og_image')->move(public_path('uploads/pages'), $ogName);
-            $validated['og_image'] = 'uploads/pages/'.$ogName;
+            $validated['og_image'] = FileUploadService::storeImage($request->file('og_image'), 'pages', 'og_image');
         }
 
         $validated['show_in_header'] = $request->boolean('show_in_header');
@@ -127,32 +123,24 @@ class PageController extends Controller
             'footer_column' => ['nullable', 'in:quick_links,legal'],
             'order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['boolean'],
-            'banner_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'banner_image' => FileUploadService::imageRules(),
             'meta_title' => ['nullable', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string', 'max:500'],
             'meta_keywords' => ['nullable', 'string', 'max:255'],
             'canonical_url' => ['nullable', 'url', 'max:255'],
-            'og_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'og_image' => FileUploadService::imageRules(),
         ]);
 
         $validated['slug'] = Str::slug($validated['slug']);
 
         if ($request->hasFile('banner_image')) {
-            if ($page->banner_image && File::exists(public_path($page->banner_image))) {
-                File::delete(public_path($page->banner_image));
-            }
-            $bannerName = time().'_banner_'.uniqid().'.'.$request->file('banner_image')->getClientOriginalExtension();
-            $request->file('banner_image')->move(public_path('uploads/pages'), $bannerName);
-            $validated['banner_image'] = 'uploads/pages/'.$bannerName;
+            FileUploadService::deleteOldImage($page->banner_image);
+            $validated['banner_image'] = FileUploadService::storeImage($request->file('banner_image'), 'pages', 'banner_image');
         }
 
         if ($request->hasFile('og_image')) {
-            if ($page->og_image && File::exists(public_path($page->og_image))) {
-                File::delete(public_path($page->og_image));
-            }
-            $ogName = time().'_og_'.uniqid().'.'.$request->file('og_image')->getClientOriginalExtension();
-            $request->file('og_image')->move(public_path('uploads/pages'), $ogName);
-            $validated['og_image'] = 'uploads/pages/'.$ogName;
+            FileUploadService::deleteOldImage($page->og_image);
+            $validated['og_image'] = FileUploadService::storeImage($request->file('og_image'), 'pages', 'og_image');
         }
 
         $validated['show_in_header'] = $request->boolean('show_in_header');
@@ -173,13 +161,8 @@ class PageController extends Controller
     {
         Gate::authorize('pages.delete');
 
-        if ($page->banner_image && File::exists(public_path($page->banner_image))) {
-            File::delete(public_path($page->banner_image));
-        }
-
-        if ($page->og_image && File::exists(public_path($page->og_image))) {
-            File::delete(public_path($page->og_image));
-        }
+        FileUploadService::deleteOldImage($page->banner_image);
+        FileUploadService::deleteOldImage($page->og_image);
 
         $page->delete();
 
