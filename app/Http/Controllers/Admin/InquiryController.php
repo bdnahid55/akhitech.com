@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Inquiry;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class InquiryController extends Controller
@@ -17,6 +18,8 @@ class InquiryController extends Controller
      */
     public function index(Request $request): View
     {
+        Gate::authorize('inquiries.view');
+
         $type = $request->query('type');
 
         $query = Inquiry::query()->latest();
@@ -35,6 +38,8 @@ class InquiryController extends Controller
      */
     public function show(Inquiry $inquiry): View
     {
+        Gate::authorize('inquiries.view');
+
         if (! $inquiry->is_read) {
             $inquiry->update(['is_read' => true]);
         }
@@ -47,6 +52,8 @@ class InquiryController extends Controller
      */
     public function destroy(Inquiry $inquiry): RedirectResponse
     {
+        Gate::authorize('inquiries.delete');
+
         $inquiry->delete();
 
         return redirect()->route('admin.inquiries.index')

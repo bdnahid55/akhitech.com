@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\PackageController as AdminPackageController;
 use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\PortfolioController as AdminPortfolioController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
+use App\Http\Controllers\Admin\RoleController as AdminRoleController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 use App\Http\Controllers\Admin\SubscriberController as AdminSubscriberController;
@@ -104,4 +105,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     // Admin Accounts Management
     Route::resource('admins', AdminUserController::class);
+
+    // Roles & Permissions Management
+    Route::resource('roles', AdminRoleController::class);
 });

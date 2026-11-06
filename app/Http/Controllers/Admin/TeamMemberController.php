@@ -9,6 +9,7 @@ use App\Models\TeamMember;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -19,6 +20,8 @@ class TeamMemberController extends Controller
      */
     public function index(): View
     {
+        Gate::authorize('team.view');
+
         $teamMembers = TeamMember::orderBy('order')->latest()->paginate(15);
 
         return view('admin.team.index', compact('teamMembers'));
@@ -29,6 +32,8 @@ class TeamMemberController extends Controller
      */
     public function create(): View
     {
+        Gate::authorize('team.create');
+
         return view('admin.team.create');
     }
 
@@ -37,6 +42,8 @@ class TeamMemberController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        Gate::authorize('team.create');
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:team_members,slug'],
@@ -79,6 +86,8 @@ class TeamMemberController extends Controller
      */
     public function edit(TeamMember $team): View
     {
+        Gate::authorize('team.edit');
+
         $member = $team;
 
         return view('admin.team.edit', compact('member'));
@@ -89,6 +98,8 @@ class TeamMemberController extends Controller
      */
     public function update(Request $request, TeamMember $team): RedirectResponse
     {
+        Gate::authorize('team.edit');
+
         $member = $team;
 
         $validated = $request->validate([
@@ -136,6 +147,8 @@ class TeamMemberController extends Controller
      */
     public function destroy(TeamMember $team): RedirectResponse
     {
+        Gate::authorize('team.delete');
+
         $member = $team;
 
         if ($member->image && ! str_starts_with($member->image, 'assets/') && File::exists(public_path($member->image))) {

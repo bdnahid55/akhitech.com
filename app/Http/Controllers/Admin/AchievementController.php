@@ -9,6 +9,7 @@ use App\Models\Achievement;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class AchievementController extends Controller
@@ -18,6 +19,8 @@ class AchievementController extends Controller
      */
     public function index(): View
     {
+        Gate::authorize('achievements.view');
+
         $achievements = Achievement::orderBy('order')->latest()->paginate(15);
 
         return view('admin.achievements.index', compact('achievements'));
@@ -28,6 +31,8 @@ class AchievementController extends Controller
      */
     public function create(): View
     {
+        Gate::authorize('achievements.create');
+
         return view('admin.achievements.create');
     }
 
@@ -36,6 +41,8 @@ class AchievementController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        Gate::authorize('achievements.create');
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'count' => ['required', 'string', 'max:50'],
@@ -71,6 +78,8 @@ class AchievementController extends Controller
      */
     public function edit(Achievement $achievement): View
     {
+        Gate::authorize('achievements.edit');
+
         return view('admin.achievements.edit', compact('achievement'));
     }
 
@@ -79,6 +88,8 @@ class AchievementController extends Controller
      */
     public function update(Request $request, Achievement $achievement): RedirectResponse
     {
+        Gate::authorize('achievements.edit');
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'count' => ['required', 'string', 'max:50'],
@@ -117,6 +128,8 @@ class AchievementController extends Controller
      */
     public function destroy(Achievement $achievement): RedirectResponse
     {
+        Gate::authorize('achievements.delete');
+
         if ($achievement->image && ! str_starts_with($achievement->image, 'assets/') && File::exists(public_path($achievement->image))) {
             File::delete(public_path($achievement->image));
         }

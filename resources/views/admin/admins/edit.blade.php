@@ -4,7 +4,7 @@
 @section('page_title', 'এডমিন একাউন্ট সম্পাদনা')
 
 @section('content')
-    <div class="card card-outline card-primary shadow-sm" style="max-width: 700px;">
+    <div class="card card-outline card-primary shadow-sm" style="max-width: 750px;">
         <div class="card-header">
             <h3 class="card-title font-weight-bold">এডমিন একাউন্ট তথ্য আপডেট করুন</h3>
             <div class="card-tools">
@@ -37,6 +37,40 @@
                         <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email', $admin->email) }}" required>
                         @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="d-block font-weight-bold">রোল নির্ধারণ করুন (Roles)</label>
+                    <p class="text-muted small mb-2">এই এডমিনের জন্য এক বা একাধিক রোল নির্বাচন করুন।</p>
+                    <div class="p-3 border rounded bg-light">
+                        <div class="row">
+                            @php
+                                $selectedRoles = old('roles', $adminRoles);
+                            @endphp
+                            @forelse ($roles as $role)
+                                <div class="col-md-6 mb-2">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox"
+                                               name="roles[]"
+                                               value="{{ $role->name }}"
+                                               class="custom-control-input"
+                                               id="role_{{ $role->id }}"
+                                               {{ in_array($role->name, $selectedRoles, true) ? 'checked' : '' }}>
+                                        <label class="custom-control-label font-weight-normal" for="role_{{ $role->id }}">
+                                            <strong>{{ $role->name }}</strong>
+                                            @if ($role->name === 'Super Admin')
+                                                <span class="badge badge-danger ml-1">পূর্ণ নিয়ন্ত্রণ</span>
+                                            @endif
+                                            <div class="text-muted small">পারমিশন সংখ্যা: {{ $role->permissions->count() }}টি</div>
+                                        </label>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="col-12 text-muted">কোনো রোল পাওয়া যায়নি।</div>
+                            @endforelse
+                        </div>
+                    </div>
+                    @error('roles') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="alert alert-info py-2 px-3 mb-3">

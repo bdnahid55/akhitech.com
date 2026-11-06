@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
 
         // Seed domain data
         $this->call([
+            RolePermissionSeeder::class,
             SettingSeeder::class,
             PageSeeder::class,
             ServiceSeeder::class,

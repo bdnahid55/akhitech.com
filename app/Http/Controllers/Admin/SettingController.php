@@ -9,6 +9,7 @@ use App\Models\Setting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class SettingController extends Controller
@@ -18,6 +19,8 @@ class SettingController extends Controller
      */
     public function edit(): View
     {
+        Gate::authorize('settings.view');
+
         $settings = Setting::getAll();
 
         return view('admin.settings.edit', compact('settings'));
@@ -28,6 +31,8 @@ class SettingController extends Controller
      */
     public function update(Request $request): RedirectResponse
     {
+        Gate::authorize('settings.edit');
+
         $validated = $request->validate([
             'site_name' => ['nullable', 'string', 'max:255'],
             'site_tagline' => ['nullable', 'string', 'max:255'],

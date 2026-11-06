@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Service;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -18,6 +19,8 @@ class ServiceController extends Controller
      */
     public function index(): View
     {
+        Gate::authorize('services.view');
+
         $services = Service::orderBy('order')->latest()->paginate(15);
 
         return view('admin.services.index', compact('services'));
@@ -28,6 +31,8 @@ class ServiceController extends Controller
      */
     public function create(): View
     {
+        Gate::authorize('services.create');
+
         return view('admin.services.create');
     }
 
@@ -36,6 +41,8 @@ class ServiceController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        Gate::authorize('services.create');
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:services,slug'],
@@ -65,6 +72,8 @@ class ServiceController extends Controller
      */
     public function edit(Service $service): View
     {
+        Gate::authorize('services.edit');
+
         return view('admin.services.edit', compact('service'));
     }
 
@@ -73,6 +82,8 @@ class ServiceController extends Controller
      */
     public function update(Request $request, Service $service): RedirectResponse
     {
+        Gate::authorize('services.edit');
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:services,slug,'.$service->id],
@@ -102,6 +113,8 @@ class ServiceController extends Controller
      */
     public function destroy(Service $service): RedirectResponse
     {
+        Gate::authorize('services.delete');
+
         $service->delete();
 
         return redirect()->route('admin.services.index')

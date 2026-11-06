@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature;
 
 use App\Models\Achievement;
@@ -13,12 +15,31 @@ use App\Models\Subscriber;
 use App\Models\TeamMember;
 use App\Models\Testimonial;
 use App\Models\User;
+use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class AdminTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->seed(RolePermissionSeeder::class);
+    }
+
+    /**
+     * Create a Super Admin user for testing.
+     */
+    protected function createSuperAdmin(array $attributes = []): User
+    {
+        $user = User::factory()->create($attributes);
+        $user->assignRole('Super Admin');
+
+        return $user;
+    }
 
     /**
      * Unauthenticated users cannot access admin dashboard.
@@ -43,7 +64,7 @@ class AdminTest extends TestCase
      */
     public function test_admin_can_log_in_and_redirect_to_dashboard(): void
     {
-        $user = User::factory()->create([
+        $user = $this->createSuperAdmin([
             'email' => 'admin@akhitech.com',
             'password' => bcrypt('password123'),
         ]);
@@ -62,7 +83,7 @@ class AdminTest extends TestCase
      */
     public function test_authenticated_admin_can_view_dashboard(): void
     {
-        $user = User::factory()->create();
+        $user = $this->createSuperAdmin();
 
         $response = $this->actingAs($user)->get('/admin');
         $response->assertStatus(200);
@@ -74,7 +95,7 @@ class AdminTest extends TestCase
      */
     public function test_admin_can_manage_services(): void
     {
-        $user = User::factory()->create();
+        $user = $this->createSuperAdmin();
 
         // 1. Create Service
         $response = $this->actingAs($user)->post('/admin/services', [
@@ -112,7 +133,7 @@ class AdminTest extends TestCase
      */
     public function test_admin_can_manage_portfolios_with_dates(): void
     {
-        $user = User::factory()->create();
+        $user = $this->createSuperAdmin();
 
         // 1. Create Portfolio
         $response = $this->actingAs($user)->post('/admin/portfolios', [
@@ -165,7 +186,7 @@ class AdminTest extends TestCase
      */
     public function test_admin_can_view_and_delete_inquiry(): void
     {
-        $user = User::factory()->create();
+        $user = $this->createSuperAdmin();
         $inquiry = Inquiry::factory()->create(['is_read' => false]);
 
         // View inquiry (marks as read)
@@ -184,7 +205,7 @@ class AdminTest extends TestCase
      */
     public function test_admin_can_delete_subscriber(): void
     {
-        $user = User::factory()->create();
+        $user = $this->createSuperAdmin();
         $subscriber = Subscriber::factory()->create();
 
         $response = $this->actingAs($user)->delete("/admin/subscribers/{$subscriber->id}");
@@ -197,7 +218,7 @@ class AdminTest extends TestCase
      */
     public function test_admin_can_manage_custom_pages(): void
     {
-        $user = User::factory()->create();
+        $user = $this->createSuperAdmin();
 
         // 1. Create Page
         $response = $this->actingAs($user)->post('/admin/pages', [
@@ -245,7 +266,7 @@ class AdminTest extends TestCase
      */
     public function test_admin_can_update_website_settings(): void
     {
-        $user = User::factory()->create();
+        $user = $this->createSuperAdmin();
 
         // View settings page
         $viewResponse = $this->actingAs($user)->get('/admin/settings');
@@ -288,7 +309,7 @@ class AdminTest extends TestCase
      */
     public function test_admin_can_manage_testimonials(): void
     {
-        $user = User::factory()->create();
+        $user = $this->createSuperAdmin();
 
         // 1. View testimonials index
         $indexResponse = $this->actingAs($user)->get('/admin/testimonials');
@@ -352,7 +373,7 @@ class AdminTest extends TestCase
      */
     public function test_admin_can_manage_team_members(): void
     {
-        $user = User::factory()->create();
+        $user = $this->createSuperAdmin();
 
         // 1. View team index
         $indexResponse = $this->actingAs($user)->get('/admin/team');
@@ -419,7 +440,7 @@ class AdminTest extends TestCase
      */
     public function test_admin_can_manage_achievements(): void
     {
-        $user = User::factory()->create();
+        $user = $this->createSuperAdmin();
 
         // 1. View achievements index
         $indexResponse = $this->actingAs($user)->get('/admin/achievements');
@@ -484,7 +505,7 @@ class AdminTest extends TestCase
      */
     public function test_admin_can_manage_packages(): void
     {
-        $user = User::factory()->create();
+        $user = $this->createSuperAdmin();
 
         // 1. View packages index
         $indexResponse = $this->actingAs($user)->get('/admin/packages');
@@ -557,11 +578,11 @@ class AdminTest extends TestCase
     }
 
     /**
-     * Admin can view, create, edit, and delete admin accounts.
+     * Admin can view, create, edit, and delete admin accounts with role assignment.
      */
     public function test_admin_can_manage_admin_users(): void
     {
-        $superAdmin = User::factory()->create([
+        $superAdmin = $this->createSuperAdmin([
             'name' => 'Super Admin',
             'email' => 'super@akhitech.com',
         ]);
@@ -576,12 +597,13 @@ class AdminTest extends TestCase
         $createResponse = $this->actingAs($superAdmin)->get('/admin/admins/create');
         $createResponse->assertStatus(200);
 
-        // 3. Store new admin
+        // 3. Store new admin with role
         $storeResponse = $this->actingAs($superAdmin)->post('/admin/admins', [
             'name' => 'New Manager',
             'email' => 'manager@akhitech.com',
             'password' => 'secretpassword123',
             'password_confirmation' => 'secretpassword123',
+            'roles' => ['Editor'],
         ]);
 
         $storeResponse->assertRedirect('/admin/admins');
@@ -591,6 +613,7 @@ class AdminTest extends TestCase
         ]);
 
         $newAdmin = User::where('email', 'manager@akhitech.com')->firstOrFail();
+        $this->assertTrue($newAdmin->hasRole('Editor'));
 
         // 4. View edit form
         $editResponse = $this->actingAs($superAdmin)->get("/admin/admins/{$newAdmin->id}/edit");
@@ -603,6 +626,7 @@ class AdminTest extends TestCase
             'email' => 'seniormanager@akhitech.com',
             'password' => '',
             'password_confirmation' => '',
+            'roles' => ['Editor'],
         ]);
 
         $updateResponse->assertRedirect('/admin/admins');
@@ -621,5 +645,126 @@ class AdminTest extends TestCase
         $deleteOtherResponse = $this->actingAs($superAdmin)->delete("/admin/admins/{$newAdmin->id}");
         $deleteOtherResponse->assertRedirect('/admin/admins');
         $this->assertDatabaseMissing('users', ['id' => $newAdmin->id]);
+    }
+
+    /**
+     * User without permissions cannot access protected admin routes.
+     */
+    public function test_user_without_permissions_receives_403_forbidden(): void
+    {
+        $unprivilegedUser = User::factory()->create();
+
+        // Attempt accessing services index
+        $this->actingAs($unprivilegedUser)->get('/admin/services')->assertStatus(403);
+
+        // Attempt accessing packages index
+        $this->actingAs($unprivilegedUser)->get('/admin/packages')->assertStatus(403);
+
+        // Attempt accessing settings
+        $this->actingAs($unprivilegedUser)->get('/admin/settings')->assertStatus(403);
+
+        // Attempt accessing admin users
+        $this->actingAs($unprivilegedUser)->get('/admin/admins')->assertStatus(403);
+
+        // Attempt accessing roles
+        $this->actingAs($unprivilegedUser)->get('/admin/roles')->assertStatus(403);
+    }
+
+    /**
+     * User with custom role can only access allowed modules.
+     */
+    public function test_user_with_specific_permission_can_only_access_permitted_modules(): void
+    {
+        $customRole = Role::create(['name' => 'Service Only Manager', 'guard_name' => 'web']);
+        $customRole->givePermissionTo(['services.view', 'services.create']);
+
+        $serviceManager = User::factory()->create();
+        $serviceManager->assignRole($customRole);
+
+        // Can view services
+        $response = $this->actingAs($serviceManager)->get('/admin/services');
+        $response->assertStatus(200);
+
+        // Can view create service
+        $createResponse = $this->actingAs($serviceManager)->get('/admin/services/create');
+        $createResponse->assertStatus(200);
+
+        // Cannot access packages (403)
+        $this->actingAs($serviceManager)->get('/admin/packages')->assertStatus(403);
+
+        // Cannot access roles (403)
+        $this->actingAs($serviceManager)->get('/admin/roles')->assertStatus(403);
+
+        // Cannot access settings (403)
+        $this->actingAs($serviceManager)->get('/admin/settings')->assertStatus(403);
+    }
+
+    /**
+     * Super Admin can manage roles and permissions.
+     */
+    public function test_super_admin_can_manage_roles_and_permissions(): void
+    {
+        $superAdmin = $this->createSuperAdmin();
+
+        // 1. View roles list
+        $indexResponse = $this->actingAs($superAdmin)->get('/admin/roles');
+        $indexResponse->assertStatus(200);
+        $indexResponse->assertSee('সুপার এডমিন');
+
+        // 2. View create role page
+        $createResponse = $this->actingAs($superAdmin)->get('/admin/roles/create');
+        $createResponse->assertStatus(200);
+        $createResponse->assertSee('রোলের নাম');
+
+        // 3. Store new role
+        $storeResponse = $this->actingAs($superAdmin)->post('/admin/roles', [
+            'name' => 'Support Agent',
+            'permissions' => ['inquiries.view', 'inquiries.delete'],
+        ]);
+
+        $storeResponse->assertRedirect('/admin/roles');
+        $this->assertDatabaseHas('roles', ['name' => 'Support Agent']);
+
+        $newRole = Role::where('name', 'Support Agent')->firstOrFail();
+        $this->assertTrue($newRole->hasPermissionTo('inquiries.view'));
+        $this->assertTrue($newRole->hasPermissionTo('inquiries.delete'));
+        $this->assertFalse($newRole->hasPermissionTo('services.create'));
+
+        // 4. View edit role page
+        $editResponse = $this->actingAs($superAdmin)->get("/admin/roles/{$newRole->id}/edit");
+        $editResponse->assertStatus(200);
+        $editResponse->assertSee('Support Agent');
+
+        // 5. Update role
+        $updateResponse = $this->actingAs($superAdmin)->put("/admin/roles/{$newRole->id}", [
+            'name' => 'Customer Care Officer',
+            'permissions' => ['inquiries.view'],
+        ]);
+
+        $updateResponse->assertRedirect('/admin/roles');
+        $this->assertDatabaseHas('roles', ['name' => 'Customer Care Officer']);
+
+        $newRole->refresh();
+        $this->assertTrue($newRole->hasPermissionTo('inquiries.view'));
+        $this->assertFalse($newRole->hasPermissionTo('inquiries.delete'));
+
+        // 6. Delete custom role
+        $deleteResponse = $this->actingAs($superAdmin)->delete("/admin/roles/{$newRole->id}");
+        $deleteResponse->assertRedirect('/admin/roles');
+        $this->assertDatabaseMissing('roles', ['id' => $newRole->id]);
+    }
+
+    /**
+     * Super Admin role cannot be deleted.
+     */
+    public function test_super_admin_role_cannot_be_deleted(): void
+    {
+        $superAdminUser = $this->createSuperAdmin();
+        $superAdminRole = Role::where('name', 'Super Admin')->firstOrFail();
+
+        $response = $this->actingAs($superAdminUser)->delete("/admin/roles/{$superAdminRole->id}");
+        $response->assertRedirect('/admin/roles');
+        $response->assertSessionHas('error');
+        $this->assertDatabaseHas('roles', ['name' => 'Super Admin']);
     }
 }

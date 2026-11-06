@@ -16,103 +16,142 @@
                     </a>
                 </li>
 
-                <li class="nav-header">কনটেন্ট ম্যানেজমেন্ট</li>
+                @canany(['pages.view', 'services.view', 'packages.view', 'portfolios.view', 'posts.view', 'testimonials.view', 'team.view', 'achievements.view'])
+                    <li class="nav-header">কনটেন্ট ম্যানেজমেন্ট</li>
 
-                <li class="nav-item">
-                    <a href="{{ route('admin.pages.index') }}" class="nav-link {{ request()->routeIs('admin.pages*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-file-alt"></i>
-                        <p>কাস্টম পেইজ সমূহ</p>
-                    </a>
-                </li>
+                    @can('pages.view')
+                        <li class="nav-item">
+                            <a href="{{ route('admin.pages.index') }}" class="nav-link {{ request()->routeIs('admin.pages*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-file-alt"></i>
+                                <p>কাস্টম পেইজ সমূহ</p>
+                            </a>
+                        </li>
+                    @endcan
 
-                <li class="nav-item">
-                    <a href="{{ route('admin.services.index') }}" class="nav-link {{ request()->routeIs('admin.services*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-concierge-bell"></i>
-                        <p>সার্ভিস সমূহ</p>
-                    </a>
-                </li>
+                    @can('services.view')
+                        <li class="nav-item">
+                            <a href="{{ route('admin.services.index') }}" class="nav-link {{ request()->routeIs('admin.services*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-concierge-bell"></i>
+                                <p>সার্ভিস সমূহ</p>
+                            </a>
+                        </li>
+                    @endcan
 
-                <li class="nav-item">
-                    <a href="{{ route('admin.packages.index') }}" class="nav-link {{ request()->routeIs('admin.packages*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-tags"></i>
-                        <p>প্যাকেজ / প্রাইসিং</p>
-                    </a>
-                </li>
+                    @can('packages.view')
+                        <li class="nav-item">
+                            <a href="{{ route('admin.packages.index') }}" class="nav-link {{ request()->routeIs('admin.packages*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-tags"></i>
+                                <p>প্যাকেজ / প্রাইসিং</p>
+                            </a>
+                        </li>
+                    @endcan
 
-                <li class="nav-item">
-                    <a href="{{ route('admin.portfolios.index') }}" class="nav-link {{ request()->routeIs('admin.portfolios*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-briefcase"></i>
-                        <p>পোর্টফোলিও প্রজেক্ট</p>
-                    </a>
-                </li>
+                    @can('portfolios.view')
+                        <li class="nav-item">
+                            <a href="{{ route('admin.portfolios.index') }}" class="nav-link {{ request()->routeIs('admin.portfolios*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-briefcase"></i>
+                                <p>পোর্টফোলিও প্রজেক্ট</p>
+                            </a>
+                        </li>
+                    @endcan
 
-                <li class="nav-item">
-                    <a href="{{ route('admin.posts.index') }}" class="nav-link {{ request()->routeIs('admin.posts*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-newspaper"></i>
-                        <p>ব্লগ পোস্ট সমূহ</p>
-                    </a>
-                </li>
+                    @can('posts.view')
+                        <li class="nav-item">
+                            <a href="{{ route('admin.posts.index') }}" class="nav-link {{ request()->routeIs('admin.posts*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-newspaper"></i>
+                                <p>ব্লগ পোস্ট সমূহ</p>
+                            </a>
+                        </li>
+                    @endcan
 
-                <li class="nav-item">
-                    <a href="{{ route('admin.testimonials.index') }}" class="nav-link {{ request()->routeIs('admin.testimonials*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-quote-left"></i>
-                        <p>প্রশংসাপত্র / রিভিউ</p>
-                    </a>
-                </li>
+                    @can('testimonials.view')
+                        <li class="nav-item">
+                            <a href="{{ route('admin.testimonials.index') }}" class="nav-link {{ request()->routeIs('admin.testimonials*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-quote-left"></i>
+                                <p>প্রশংসাপত্র / রিভিউ</p>
+                            </a>
+                        </li>
+                    @endcan
 
-                <li class="nav-item">
-                    <a href="{{ route('admin.team.index') }}" class="nav-link {{ request()->routeIs('admin.team*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-users"></i>
-                        <p>টিম মেম্বারস</p>
-                    </a>
-                </li>
+                    @can('team.view')
+                        <li class="nav-item">
+                            <a href="{{ route('admin.team.index') }}" class="nav-link {{ request()->routeIs('admin.team*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>টিম মেম্বারস</p>
+                            </a>
+                        </li>
+                    @endcan
 
-                <li class="nav-item">
-                    <a href="{{ route('admin.achievements.index') }}" class="nav-link {{ request()->routeIs('admin.achievements*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-trophy"></i>
-                        <p>অর্জন ও কাউন্টার</p>
-                    </a>
-                </li>
+                    @can('achievements.view')
+                        <li class="nav-item">
+                            <a href="{{ route('admin.achievements.index') }}" class="nav-link {{ request()->routeIs('admin.achievements*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-trophy"></i>
+                                <p>অর্জন ও কাউন্টার</p>
+                            </a>
+                        </li>
+                    @endcan
+                @endcanany
 
-                <li class="nav-header">গ্রাহক ও অনুসন্ধান</li>
+                @canany(['inquiries.view', 'subscribers.view'])
+                    <li class="nav-header">গ্রাহক ও অনুসন্ধান</li>
 
-                <li class="nav-item">
-                    <a href="{{ route('admin.inquiries.index') }}" class="nav-link {{ request()->routeIs('admin.inquiries*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-envelope"></i>
-                        <p>
-                            বার্তা ও কোটেশন
-                            @php
-                                $unreadCount = \App\Models\Inquiry::where('is_read', false)->count();
-                            @endphp
-                            @if ($unreadCount > 0)
-                                <span class="badge badge-warning right">{{ $unreadCount }}</span>
-                            @endif
-                        </p>
-                    </a>
-                </li>
+                    @can('inquiries.view')
+                        <li class="nav-item">
+                            <a href="{{ route('admin.inquiries.index') }}" class="nav-link {{ request()->routeIs('admin.inquiries*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-envelope"></i>
+                                <p>
+                                    বার্তা ও কোটেশন
+                                    @php
+                                        $unreadCount = \App\Models\Inquiry::where('is_read', false)->count();
+                                    @endphp
+                                    @if ($unreadCount > 0)
+                                        <span class="badge badge-warning right">{{ $unreadCount }}</span>
+                                    @endif
+                                </p>
+                            </a>
+                        </li>
+                    @endcan
 
-                <li class="nav-item">
-                    <a href="{{ route('admin.subscribers.index') }}" class="nav-link {{ request()->routeIs('admin.subscribers*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-users"></i>
-                        <p>নিউজলেটার গ্রাহক</p>
-                    </a>
-                </li>
+                    @can('subscribers.view')
+                        <li class="nav-item">
+                            <a href="{{ route('admin.subscribers.index') }}" class="nav-link {{ request()->routeIs('admin.subscribers*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>নিউজলেটার গ্রাহক</p>
+                            </a>
+                        </li>
+                    @endcan
+                @endcanany
 
-                <li class="nav-header">কনফিগারেশন ও ইউজার</li>
+                @canany(['admins.view', 'roles.manage', 'settings.view'])
+                    <li class="nav-header">কনফিগারেশন ও ইউজার</li>
 
-                <li class="nav-item">
-                    <a href="{{ route('admin.admins.index') }}" class="nav-link {{ request()->routeIs('admin.admins*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-user-shield"></i>
-                        <p>এডমিন একাউন্টস</p>
-                    </a>
-                </li>
+                    @can('admins.view')
+                        <li class="nav-item">
+                            <a href="{{ route('admin.admins.index') }}" class="nav-link {{ request()->routeIs('admin.admins*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-user-shield"></i>
+                                <p>এডমিন একাউন্টস</p>
+                            </a>
+                        </li>
+                    @endcan
 
-                <li class="nav-item">
-                    <a href="{{ route('admin.settings.edit') }}" class="nav-link {{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-cogs"></i>
-                        <p>ওয়েবসাইট সেটিংস</p>
-                    </a>
-                </li>
+                    @can('roles.manage')
+                        <li class="nav-item">
+                            <a href="{{ route('admin.roles.index') }}" class="nav-link {{ request()->routeIs('admin.roles*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-user-lock"></i>
+                                <p>রোল ও পারমিশন</p>
+                            </a>
+                        </li>
+                    @endcan
+
+                    @can('settings.view')
+                        <li class="nav-item">
+                            <a href="{{ route('admin.settings.edit') }}" class="nav-link {{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-cogs"></i>
+                                <p>ওয়েবসাইট সেটিংস</p>
+                            </a>
+                        </li>
+                    @endcan
+                @endcanany
 
                 <li class="nav-header">অন্যান্য</li>
 

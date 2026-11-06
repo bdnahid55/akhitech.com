@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Page;
 use App\Models\Setting;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -23,6 +24,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Super Admin bypass: automatically grant all abilities to Super Admin
+        Gate::before(function ($user, $ability): ?bool {
+            return $user->hasRole('Super Admin') ? true : null;
+        });
+
         // Share dynamic navigation and site settings with all views
         View::composer('*', function ($view): void {
             if (Schema::hasTable('settings') && Schema::hasTable('pages')) {

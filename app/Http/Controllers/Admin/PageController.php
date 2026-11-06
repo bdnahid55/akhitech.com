@@ -9,6 +9,7 @@ use App\Models\Page;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -20,6 +21,8 @@ class PageController extends Controller
      */
     public function index(): View
     {
+        Gate::authorize('pages.view');
+
         $pages = Page::with('parent')
             ->orderBy('order')
             ->orderBy('title')
@@ -33,6 +36,8 @@ class PageController extends Controller
      */
     public function create(): View
     {
+        Gate::authorize('pages.create');
+
         $parentPages = Page::whereNull('header_parent_id')->orderBy('title')->get();
 
         return view('admin.pages.create', compact('parentPages'));
@@ -43,6 +48,8 @@ class PageController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        Gate::authorize('pages.create');
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:pages,slug'],
@@ -93,6 +100,8 @@ class PageController extends Controller
      */
     public function edit(Page $page): View
     {
+        Gate::authorize('pages.edit');
+
         $parentPages = Page::whereNull('header_parent_id')
             ->where('id', '!=', $page->id)
             ->orderBy('title')
@@ -106,6 +115,8 @@ class PageController extends Controller
      */
     public function update(Request $request, Page $page): RedirectResponse
     {
+        Gate::authorize('pages.edit');
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255', Rule::unique('pages')->ignore($page->id)],
@@ -160,6 +171,8 @@ class PageController extends Controller
      */
     public function destroy(Page $page): RedirectResponse
     {
+        Gate::authorize('pages.delete');
+
         if ($page->banner_image && File::exists(public_path($page->banner_image))) {
             File::delete(public_path($page->banner_image));
         }

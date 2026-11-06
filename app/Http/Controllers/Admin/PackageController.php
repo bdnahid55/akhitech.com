@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Package;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -18,6 +19,8 @@ class PackageController extends Controller
      */
     public function index(): View
     {
+        Gate::authorize('packages.view');
+
         $packages = Package::orderBy('order')->latest()->paginate(15);
 
         return view('admin.packages.index', compact('packages'));
@@ -28,6 +31,8 @@ class PackageController extends Controller
      */
     public function create(): View
     {
+        Gate::authorize('packages.create');
+
         return view('admin.packages.create');
     }
 
@@ -36,6 +41,8 @@ class PackageController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        Gate::authorize('packages.create');
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:packages,slug'],
@@ -79,6 +86,8 @@ class PackageController extends Controller
      */
     public function edit(Package $package): View
     {
+        Gate::authorize('packages.edit');
+
         return view('admin.packages.edit', compact('package'));
     }
 
@@ -87,6 +96,8 @@ class PackageController extends Controller
      */
     public function update(Request $request, Package $package): RedirectResponse
     {
+        Gate::authorize('packages.edit');
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:packages,slug,'.$package->id],
@@ -130,6 +141,8 @@ class PackageController extends Controller
      */
     public function destroy(Package $package): RedirectResponse
     {
+        Gate::authorize('packages.delete');
+
         $package->delete();
 
         return redirect()->route('admin.packages.index')

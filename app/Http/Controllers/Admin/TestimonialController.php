@@ -9,6 +9,7 @@ use App\Models\Testimonial;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class TestimonialController extends Controller
@@ -18,6 +19,8 @@ class TestimonialController extends Controller
      */
     public function index(): View
     {
+        Gate::authorize('testimonials.view');
+
         $testimonials = Testimonial::orderBy('order')->latest()->paginate(15);
 
         return view('admin.testimonials.index', compact('testimonials'));
@@ -28,6 +31,8 @@ class TestimonialController extends Controller
      */
     public function create(): View
     {
+        Gate::authorize('testimonials.create');
+
         return view('admin.testimonials.create');
     }
 
@@ -36,6 +41,8 @@ class TestimonialController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        Gate::authorize('testimonials.create');
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'designation' => ['nullable', 'string', 'max:255'],
@@ -70,6 +77,8 @@ class TestimonialController extends Controller
      */
     public function edit(Testimonial $testimonial): View
     {
+        Gate::authorize('testimonials.edit');
+
         return view('admin.testimonials.edit', compact('testimonial'));
     }
 
@@ -78,6 +87,8 @@ class TestimonialController extends Controller
      */
     public function update(Request $request, Testimonial $testimonial): RedirectResponse
     {
+        Gate::authorize('testimonials.edit');
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'designation' => ['nullable', 'string', 'max:255'],
@@ -115,6 +126,8 @@ class TestimonialController extends Controller
      */
     public function destroy(Testimonial $testimonial): RedirectResponse
     {
+        Gate::authorize('testimonials.delete');
+
         if ($testimonial->image && ! str_starts_with($testimonial->image, 'assets/') && File::exists(public_path($testimonial->image))) {
             File::delete(public_path($testimonial->image));
         }

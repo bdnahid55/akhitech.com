@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Portfolio;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -18,6 +19,8 @@ class PortfolioController extends Controller
      */
     public function index(): View
     {
+        Gate::authorize('portfolios.view');
+
         $portfolios = Portfolio::latest()->paginate(15);
 
         return view('admin.portfolios.index', compact('portfolios'));
@@ -28,6 +31,8 @@ class PortfolioController extends Controller
      */
     public function create(): View
     {
+        Gate::authorize('portfolios.create');
+
         return view('admin.portfolios.create');
     }
 
@@ -36,6 +41,8 @@ class PortfolioController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        Gate::authorize('portfolios.create');
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:portfolios,slug'],
@@ -74,6 +81,8 @@ class PortfolioController extends Controller
      */
     public function edit(Portfolio $portfolio): View
     {
+        Gate::authorize('portfolios.edit');
+
         return view('admin.portfolios.edit', compact('portfolio'));
     }
 
@@ -82,6 +91,8 @@ class PortfolioController extends Controller
      */
     public function update(Request $request, Portfolio $portfolio): RedirectResponse
     {
+        Gate::authorize('portfolios.edit');
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:portfolios,slug,'.$portfolio->id],
@@ -120,6 +131,8 @@ class PortfolioController extends Controller
      */
     public function destroy(Portfolio $portfolio): RedirectResponse
     {
+        Gate::authorize('portfolios.delete');
+
         $portfolio->delete();
 
         return redirect()->route('admin.portfolios.index')

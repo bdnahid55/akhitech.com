@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -18,6 +19,8 @@ class PostController extends Controller
      */
     public function index(): View
     {
+        Gate::authorize('posts.view');
+
         $posts = Post::latest('published_at')->paginate(15);
 
         return view('admin.posts.index', compact('posts'));
@@ -28,6 +31,8 @@ class PostController extends Controller
      */
     public function create(): View
     {
+        Gate::authorize('posts.create');
+
         return view('admin.posts.create');
     }
 
@@ -36,6 +41,8 @@ class PostController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        Gate::authorize('posts.create');
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:posts,slug'],
@@ -72,6 +79,8 @@ class PostController extends Controller
      */
     public function edit(Post $post): View
     {
+        Gate::authorize('posts.edit');
+
         return view('admin.posts.edit', compact('post'));
     }
 
@@ -80,6 +89,8 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post): RedirectResponse
     {
+        Gate::authorize('posts.edit');
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:posts,slug,'.$post->id],
@@ -114,6 +125,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post): RedirectResponse
     {
+        Gate::authorize('posts.delete');
+
         $post->delete();
 
         return redirect()->route('admin.posts.index')
